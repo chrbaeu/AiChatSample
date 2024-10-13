@@ -1,0 +1,34 @@
+@using Microsoft.Extensions.AI;
+@using CommunityToolkit.Mvvm.Messaging;
+@using Microsoft.AspNetCore.Components.Web
+
+@inject ChatService ChatService
+@inject IMessenger Messenger
+
+<div class="chat-border">
+    @if (ChatService.Messages.Any())
+    {
+        <button class="delete-all-button" @onclick="DeleteChat">Delete chat</button>
+    }
+    <div class="chat-container">
+        @if (ChatService.Messages.Count() == 0)
+        {
+            <div class="chat-message ai-message">
+                <p>Send a message to start a new chat.</p>
+            </div>
+        }
+        @foreach (var message in ChatService.Messages)
+        {
+            <div class="chat-message @(message.Role == ChatRole.User ? "user-message" : "ai-message")">
+                <p>@message.ToString()</p>
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    protected override void OnInitialized()
+        => Messenger.Register<List<ChatMessage>>(this, (r, m) => StateHasChanged());
+
+    private void DeleteChat() => ChatService.Clear();
+}
