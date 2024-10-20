@@ -23,6 +23,8 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="5" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="5" />
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="5" />
                 <ColumnDefinition Width="Auto" />
@@ -32,8 +34,12 @@
                 <Label>Temprature:</Label>
                 <TextBox Text="{Binding Temprature}" />
             </StackPanel>
-            <TextBox Grid.Column="2" Text="{Binding Message, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="True" />
-            <Button Grid.Column="4" Command="{Binding SendMessageCommand}" VerticalAlignment="Center">Send</Button>
+            <StackPanel Grid.Column="2" Orientation="Vertical">
+                <Button Content="Load image" Command="{Binding LoadImageCommand}"/>
+                <Image Width="64" Height="64" Stretch="Uniform" Source="{Binding Image}"/>
+            </StackPanel>
+            <TextBox Grid.Column="4" Text="{Binding Message, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="True" />
+            <Button Grid.Column="6" Command="{Binding SendMessageCommand}" VerticalAlignment="Center">Send</Button>
         </Grid>
     </Grid>
 </Window>

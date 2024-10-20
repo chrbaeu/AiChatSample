@@ -15,9 +15,13 @@ public class ChatService(
 
     public IEnumerable<ChatMessage> Messages => conversation.Where(m => (m.Role == ChatRole.User || m.Role == ChatRole.Assistant) && !string.IsNullOrEmpty(m.ToString()));
 
-    public async Task SendMessageAsync(string message, bool useTools = false, float? temperature = null)
+    public async Task SendMessageAsync(string message, bool useTools = false, float? temperature = null, string? imagePath = null)
     {
         conversation.Add(new(ChatRole.User, message));
+        if (imagePath != null)
+        {
+            conversation.Add(new(ChatRole.User, [new ImageContent(ImageProcessor.ConvertBitmapSourceToByteArray(ImageProcessor.GetDownscaledImage(imagePath, 512)))]));
+        }
         messenger.Send(conversation);
         ChatOptions chatOptions = new();
         if (useTools)
