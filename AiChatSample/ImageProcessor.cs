@@ -1,4 +1,5 @@
 using System.IO;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
 namespace AiChatSample;
@@ -15,19 +16,13 @@ public class ImageProcessor
         {
             throw new FileNotFoundException($"The file at path {imagePath} does not exist.", imagePath);
         }
-        BitmapImage bitmapImage = new();
-        using FileStream fs = new(imagePath, FileMode.Open, FileAccess.Read);
-        bitmapImage.BeginInit();
-        bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
-        bitmapImage.StreamSource = fs;
-        bitmapImage.EndInit();
-        bitmapImage.Freeze();
-        WriteableBitmap writeableBitmap = new(bitmapImage);
-        TransformedBitmap resizedBitmap = ResizeBitmap(writeableBitmap, maxSize, maxSize);
-        return resizedBitmap;
+        BitmapImage bitmapImage = LoadBitmapImage(imagePath);
+        return ResizeBitmap(bitmapImage, maxSize);
     }
+
     public static byte[] ConvertBitmapSourceToByteArray(BitmapSource bitmap)
     {
+        ArgumentNullException.ThrowIfNull(bitmap);
         using MemoryStream ms = new();
         BmpBitmapEncoder encoder = new();
         encoder.Frames.Add(BitmapFrame.Create(bitmap));
@@ -35,19 +30,24 @@ public class ImageProcessor
         return ms.ToArray();
     }
 
-    private static TransformedBitmap ResizeBitmap(WriteableBitmap sourceBitmap, int maxWidth, int maxHeight)
+    private static TransformedBitmap ResizeBitmap(BitmapSource sourceBitmap, int maxSize)
     {
-        double width = sourceBitmap.PixelWidth;
-        double height = sourceBitmap.PixelHeight;
-        double ratioX = maxWidth / width;
-        double ratioY = maxHeight / height;
-        double ratio = Math.Min(ratioX, ratioY);
-        TransformedBitmap scaledBitmap = new();
-        scaledBitmap.BeginInit();
-        scaledBitmap.Source = sourceBitmap;
-        scaledBitmap.Transform = new System.Windows.Media.ScaleTransform(ratio, ratio);
-        scaledBitmap.EndInit();
-        return scaledBitmap;
+        double scale = Math.Min(maxSize / (double)sourceBitmap.PixelWidth, maxSize / (double)sourceBitmap.PixelHeight);
+        ScaleTransform transform = new(scale, scale);
+        TransformedBitmap resizedBitmap = new(sourceBitmap, transform);
+        resizedBitmap.Freeze();
+        return resizedBitmap;
     }
 
+    private static BitmapImage LoadBitmapImage(string imagePath)
+    {
+        BitmapImage bitmapImage = new();
+        using FileStream fs = new(imagePath, FileMode.Open, FileAccess.Read);
+        bitmapImage.BeginInit();
+        bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
+        bitmapImage.StreamSource = fs;
+        bitmapImage.EndInit();
+        bitmapImage.Freeze();
+        return bitmapImage;
+    }
 }

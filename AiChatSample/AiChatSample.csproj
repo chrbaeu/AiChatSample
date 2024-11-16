@@ -3,6 +3,7 @@
 	<PropertyGroup>
 		<OutputType>WinExe</OutputType>
 		<TargetFramework>net9.0-windows</TargetFramework>
+		<LangVersion>preview</LangVersion>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<UseWPF>true</UseWPF>
@@ -11,16 +12,14 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.3.2" />
-		<PackageReference Include="Microsoft.Extensions.AI" Version="9.0.0-preview.9.24507.7" />
-		<PackageReference Include="Microsoft.Extensions.AI.Ollama" Version="9.0.0-preview.9.24507.7" />
-		<PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
-		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.1" />
-		<PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.1" />
-		<PackageReference Include="Microsoft.Web.WebView2" Version="1.0.2792.45" />
-		<PackageReference Include="Microsoft.AspNetCore.Components.WebView.Wpf" Version="8.0.91" />
-		<PackageReference Include="LLamaSharp" Version="0.16.0" />
-		<PackageReference Include="LLamaSharp.Backend.Cpu" Version="0.16.0" />
+		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0-preview2" />
+		<PackageReference Include="Microsoft.Extensions.AI" Version="9.0.0-preview.9.24556.5" />
+		<PackageReference Include="Microsoft.Extensions.AI.Ollama" Version="9.0.0-preview.9.24556.5" />
+		<PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.0" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.0" />
+		<PackageReference Include="Microsoft.Web.WebView2" Version="1.0.2849.39" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.WebView.Wpf" Version="9.0.10" />
 	</ItemGroup>
 
 </Project>

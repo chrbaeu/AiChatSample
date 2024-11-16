@@ -10,26 +10,25 @@ public partial class MainWindowViewModel(
     ) : ObservableObject
 {
     [ObservableProperty]
-    string message = "";
+    public partial string Message { get; set; } = "";
 
     [ObservableProperty]
-    bool useTools = false;
+    public partial bool UseTools { get; set; }
 
     [ObservableProperty]
-    string temprature = "";
+    public partial string Temperature { get; set; } = "";
 
     [ObservableProperty]
-    string imagePath = "";
-
+    public partial string ImagePath { get; set; } = "";
 
     [ObservableProperty]
-    BitmapSource? image;
+    public partial BitmapSource? Image { get; set; }
 
     [RelayCommand]
     private async Task SendMessage()
     {
         float? temperatureValue = null;
-        if (!string.IsNullOrEmpty(Temprature) && float.TryParse(Temprature, out float temp))
+        if (!string.IsNullOrEmpty(Temperature) && float.TryParse(Temperature, out float temp))
         {
             temperatureValue = temp;
         }
@@ -50,6 +49,11 @@ public partial class MainWindowViewModel(
         {
             ImagePath = openFileDialog.FileName;
             Image = ImageProcessor.GetDownscaledImage(ImagePath, 128);
+        }
+        else
+        {
+            ImagePath = "";
+            Image = null;
         }
     }
 }

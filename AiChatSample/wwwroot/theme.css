@@ -1,0 +1,85 @@
+:root {
+    --bg-color: #ffffff;
+    --border-color: rgba(220, 220, 220, 0.8);
+    --button-bg: #bbbbbb;
+    --button-hover-bg: #ff4d4d;
+    --button-text-color: white;
+    --user-message-bg: #0078d4;
+    --user-text-color: white;
+    --ai-message-bg: #e1e1e1;
+    --ai-text-color: black;
+}
+
+.dark-mode {
+    --bg-color: #121212;
+    --border-color: rgba(255, 255, 255, 0.2);
+    --button-bg: #cccccc;
+    --user-message-bg: #1e88e5;
+    --ai-message-bg: #424242;
+    --ai-text-color: white;
+}
+
+.delete-all-button {
+    position: absolute;
+    top: 10px;
+    left: 20px;
+    background-color: var(--button-bg);
+    color: var(--button-text-color);
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+    .delete-all-button:hover {
+        background-color: var(--button-hover-bg);
+    }
+
+.chat-border {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    padding: 10px;
+    background-color: var(--bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    box-sizing: border-box;
+}
+
+.chat-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 10px;
+    height: 100%;
+    overflow-y: auto;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    width: 100%;
+    border-radius: 10px;
+}
+
+.chat-message {
+    max-width: 75%;
+    padding: 5px 15px;
+    border-radius: 15px;
+    font-size: 14px;
+    line-height: 1.5;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.user-message {
+    align-self: flex-end;
+    background-color: var(--user-message-bg);
+    color: var(--user-text-color);
+    border-bottom-right-radius: 0;
+}
+
+.ai-message {
+    align-self: flex-start;
+    background-color: var(--ai-message-bg);
+    color: var(--ai-text-color);
+    border-bottom-left-radius: 0;
+}

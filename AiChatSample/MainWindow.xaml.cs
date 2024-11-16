@@ -9,13 +9,14 @@ namespace AiChatSample;
 /// </summary>
 public partial class MainWindow : Window
 {
-    public MainWindow(MainWindowViewModel mainWindowViewModel, ChatService chatService)
+    public MainWindow(MainWindowViewModel mainWindowViewModel, ChatService chatService, ThemeService themeService)
     {
         DataContext = mainWindowViewModel;
-        var serviceCollection = new ServiceCollection();
+        ServiceCollection serviceCollection = new();
         serviceCollection.AddWpfBlazorWebView();
         serviceCollection.AddSingleton<IMessenger>(WeakReferenceMessenger.Default);
         serviceCollection.AddSingleton<ChatService>(chatService);
+        serviceCollection.AddSingleton<ThemeService>(themeService);
         Resources.Add("services", serviceCollection.BuildServiceProvider());
         InitializeComponent();
     }

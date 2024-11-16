@@ -8,6 +8,7 @@ namespace AiChatSample;
 public class ChatService(
         IMessenger messenger,
         IChatClient chatClient,
+        ThemeService themeService,
         AiChatSampleSettings settings
     )
 {
@@ -26,15 +27,33 @@ public class ChatService(
         ChatOptions chatOptions = new();
         if (useTools)
         {
-            chatOptions.Tools = [AIFunctionFactory.Create(GetTime)];
+            chatOptions.Tools = [
+                AIFunctionFactory.Create(GetTime),
+                AIFunctionFactory.Create(themeService.SetDarkMode),
+                AIFunctionFactory.Create(themeService.IsDarkMode)
+                ];
         }
         if (temperature.HasValue)
         {
             chatOptions.Temperature = temperature.Value;
         }
-        ChatCompletion response = await chatClient.CompleteAsync(conversation, chatOptions);
-        conversation.Add(response.Message);
-        messenger.Send(conversation);
+        if (useTools)
+        {
+            ChatCompletion response = await chatClient.CompleteAsync(conversation, chatOptions);
+            conversation.Add(response.Message);
+            messenger.Send(conversation);
+        }
+        else
+        {
+            ChatMessage responseMessage = new(ChatRole.Assistant, "");
+            conversation.Add(responseMessage);
+            messenger.Send(conversation);
+            await foreach (StreamingChatCompletionUpdate response in chatClient.CompleteStreamingAsync(conversation, chatOptions))
+            {
+                responseMessage.Text += response.Text;
+                messenger.Send(conversation);
+            }
+        }
     }
 
     public void Clear()
@@ -48,4 +67,5 @@ public class ChatService(
     {
         return DateTime.Now.ToString(CultureInfo.InvariantCulture);
     }
+
 }

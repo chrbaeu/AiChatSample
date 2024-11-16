@@ -4,8 +4,9 @@
 
 @inject ChatService ChatService
 @inject IMessenger Messenger
+@inject ThemeService ThemeService
 
-<div class="chat-border">
+<div class="chat-border @themeClass">
     @if (ChatService.Messages.Any())
     {
         <button class="delete-all-button" @onclick="DeleteChat">Delete chat</button>
@@ -27,8 +28,13 @@
 </div>
 
 @code {
+    private string themeClass => ThemeService.IsDarkMode() ? "dark-mode" : "";
+
     protected override void OnInitialized()
-        => Messenger.Register<List<ChatMessage>>(this, (r, m) => StateHasChanged());
+    {
+        Messenger.Register<List<ChatMessage>>(this, (r, m) => StateHasChanged());
+        Messenger.Register<ThemeChangedEvent>(this, (r, m) => StateHasChanged());
+    }
 
     private void DeleteChat() => ChatService.Clear();
 }

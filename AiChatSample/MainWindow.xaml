@@ -31,8 +31,8 @@
             </Grid.ColumnDefinitions>
             <StackPanel Orientation="Vertical">
                 <CheckBox Content="Use tools" IsChecked="{Binding UseTools}"/>
-                <Label>Temprature:</Label>
-                <TextBox Text="{Binding Temprature}" />
+                <Label>Temperature:</Label>
+                <TextBox Text="{Binding Temperature}" />
             </StackPanel>
             <StackPanel Grid.Column="2" Orientation="Vertical">
                 <Button Content="Load image" Command="{Binding LoadImageCommand}"/>
