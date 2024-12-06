@@ -8,44 +8,44 @@ namespace AiChatSample;
 
 public partial class App : Application
 {
-    private readonly IHost host;
+    private readonly IHost appHost;
 
     public App()
     {
-        host = Host.CreateDefaultBuilder()
-            .ConfigureServices((context, services) =>
-            {
-                services.AddAiChatSampleSettingsAsSingleton();
-                services.AddSingleton<IMessenger>(WeakReferenceMessenger.Default);
-                services.AddSingleton<ThemeService>();
+        HostApplicationBuilder builder = Host.CreateApplicationBuilder();
+        builder.Services.AddSingleton<IMessenger>(WeakReferenceMessenger.Default);
 
-                services.AddChatClient(builder =>
-                {
-                    AiChatSampleSettings settings = builder.Services.GetRequiredService<AiChatSampleSettings>();
-                    return builder
-                        .UseFunctionInvocation()
-                        .Use(new OllamaChatClient(settings.OllamaEndpointUri, modelId: settings.AiModelId));
-                });
+        builder.Services.AddAiChatSampleSettingsAsSingleton();
 
-                services.AddScoped<ChatService>();
-                services.AddScoped<MainWindowViewModel>();
-                services.AddScoped<MainWindow>();
-            })
-            .Build();
+        builder.Services.AddChatClient(builder =>
+        {
+            AiChatSampleSettings settings = builder.Services.GetRequiredService<AiChatSampleSettings>();
+            return builder
+                .UseFunctionInvocation()
+                .Use(new OllamaChatClient(settings.OllamaEndpointUri, modelId: settings.AiModelId));
+        });
+
+        builder.Services.AddSingleton<ThemeService>();
+        builder.Services.AddScoped<ChatService>();
+
+        builder.Services.AddScoped<MainWindowViewModel>();
+        builder.Services.AddScoped<MainWindow>();
+
+        appHost = builder.Build();
     }
 
     protected override async void OnStartup(StartupEventArgs e)
     {
-        await host.StartAsync();
-        Current.MainWindow = host.Services.GetRequiredService<MainWindow>();
+        await appHost.StartAsync();
+        Current.MainWindow = appHost.Services.GetRequiredService<MainWindow>();
         Current.MainWindow.Show();
         base.OnStartup(e);
     }
 
     protected override async void OnExit(ExitEventArgs e)
     {
-        await host.StopAsync();
-        host.Dispose();
+        await appHost.StopAsync();
+        appHost.Dispose();
         base.OnExit(e);
     }
 }

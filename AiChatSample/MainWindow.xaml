@@ -39,7 +39,7 @@
                 <Image Width="64" Height="64" Stretch="Uniform" Source="{Binding Image}"/>
             </StackPanel>
             <TextBox Grid.Column="4" Text="{Binding Message, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="True" />
-            <Button Grid.Column="6" Command="{Binding SendMessageCommand}" VerticalAlignment="Center">Send</Button>
+            <Button Style="{DynamicResource AccentButtonStyle}" Grid.Column="6" Command="{Binding SendMessageCommand}" VerticalAlignment="Center">Send</Button>
         </Grid>
     </Grid>
 </Window>
