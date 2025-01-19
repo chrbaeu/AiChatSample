@@ -2,6 +2,9 @@
 using Microsoft.Extensions.AI;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
+using Microsoft.Extensions.VectorData;
+using Microsoft.SemanticKernel.Connectors.InMemory;
 using System.Windows;
 
 namespace AiChatSample;
@@ -15,15 +18,25 @@ public partial class App : Application
         HostApplicationBuilder builder = Host.CreateApplicationBuilder();
         builder.Services.AddSingleton<IMessenger>(WeakReferenceMessenger.Default);
 
-        builder.Services.AddAiChatSampleSettingsAsSingleton();
-
+        builder.Services.AddOptions<AiChatSampleSettings>().BindConfiguration(nameof(AiChatSampleSettings)).ValidateOnStart();
         builder.Services.AddChatClient(builder =>
         {
-            AiChatSampleSettings settings = builder.Services.GetRequiredService<AiChatSampleSettings>();
-            return builder
-                .UseFunctionInvocation()
-                .Use(new OllamaChatClient(settings.OllamaEndpointUri, modelId: settings.AiModelId));
+            AiChatSampleSettings settings = builder.GetRequiredService<IOptions<AiChatSampleSettings>>().Value;
+            return new OllamaChatClient(settings.OllamaEndpointUri, modelId: settings.AiModelId);
+        }).UseFunctionInvocation();
+
+        builder.Services.AddOptions<EmbeddingsSampleSettings>().BindConfiguration(nameof(EmbeddingsSampleSettings)).ValidateOnStart().Configure(x =>
+        {
+
         });
+        builder.Services.AddSingleton<IVectorStore, InMemoryVectorStore>();
+        builder.Services.AddEmbeddingGenerator<string, Embedding<float>>(builder =>
+        {
+            EmbeddingsSampleSettings settings = builder.GetRequiredService<IOptions<EmbeddingsSampleSettings>>().Value;
+            return new OllamaEmbeddingGenerator(settings.OllamaEndpointUri, modelId: settings.EmbeddingsModelId);
+        });
+        builder.Services.AddSingleton<EmbeddingService>();
+        builder.Services.AddHostedService<EmbeddingService>(x => x.GetRequiredService<EmbeddingService>());
 
         builder.Services.AddSingleton<ThemeService>();
         builder.Services.AddScoped<ChatService>();

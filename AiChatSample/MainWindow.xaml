@@ -12,7 +12,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
             <RowDefinition Height="5" />
-            <RowDefinition Height="90" />
+            <RowDefinition Height="100" />
         </Grid.RowDefinitions>
         <blazor:BlazorWebView HostPage="wwwroot\index.html" Services="{DynamicResource services}">
             <blazor:BlazorWebView.RootComponents>
@@ -31,8 +31,15 @@
             </Grid.ColumnDefinitions>
             <StackPanel Orientation="Vertical">
                 <CheckBox Content="Use tools" IsChecked="{Binding UseTools}"/>
-                <Label>Temperature:</Label>
-                <TextBox Text="{Binding Temperature}" />
+                <CheckBox Content="Use Embeddings" IsChecked="{Binding UseEmbeddings}"/>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Label Grid.Column="0" Margin="0,0,5,0" VerticalAlignment="Center">Temperature:</Label>
+                    <TextBox Grid.Column="1" Text="{Binding Temperature}" />
+                </Grid>
             </StackPanel>
             <StackPanel Grid.Column="2" Orientation="Vertical">
                 <Button Content="Load image" Command="{Binding LoadImageCommand}"/>

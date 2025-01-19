@@ -16,6 +16,9 @@ public partial class MainWindowViewModel(
     public partial bool UseTools { get; set; }
 
     [ObservableProperty]
+    public partial bool UseEmbeddings { get; set; }
+
+    [ObservableProperty]
     public partial string Temperature { get; set; } = "";
 
     [ObservableProperty]
@@ -32,7 +35,7 @@ public partial class MainWindowViewModel(
         {
             temperatureValue = temp;
         }
-        await chatService.SendMessageAsync(Message, UseTools, temperatureValue, !string.IsNullOrEmpty(ImagePath) ? ImagePath : null);
+        await chatService.SendMessageAsync(Message, UseTools, UseEmbeddings, temperatureValue, !string.IsNullOrEmpty(ImagePath) ? ImagePath : null);
         Message = "";
         ImagePath = "";
         Image = null;

@@ -1,7 +1,9 @@
 ﻿using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Extensions.AI;
+using Microsoft.Extensions.Options;
 using System.ComponentModel;
 using System.Globalization;
+using System.Text;
 
 namespace AiChatSample;
 
@@ -9,15 +11,31 @@ public class ChatService(
         IMessenger messenger,
         IChatClient chatClient,
         ThemeService themeService,
-        AiChatSampleSettings settings
+        EmbeddingService embeddingService,
+        IOptions<AiChatSampleSettings> settings,
+        IOptions<EmbeddingsSampleSettings> embeddingsSettings
     )
 {
-    private readonly List<ChatMessage> conversation = string.IsNullOrEmpty(settings.SystemPrompt) ? [] : [new ChatMessage(ChatRole.System, settings.SystemPrompt)];
+    private readonly List<ChatMessage> conversation = string.IsNullOrEmpty(settings.Value.SystemPrompt) ? [] : [new ChatMessage(ChatRole.System, settings.Value.SystemPrompt)];
 
     public IEnumerable<ChatMessage> Messages => conversation.Where(m => (m.Role == ChatRole.User || m.Role == ChatRole.Assistant) && !string.IsNullOrEmpty(m.ToString()));
 
-    public async Task SendMessageAsync(string message, bool useTools = false, float? temperature = null, string? imagePath = null)
+    public async Task SendMessageAsync(string message, bool useTools = false, bool useEmbeddings = false, float? temperature = null, string? imagePath = null)
     {
+        if (useEmbeddings)
+        {
+            var data = await embeddingService.Search(message);
+            StringBuilder stringBuilder = new();
+            stringBuilder.AppendLine(embeddingsSettings.Value.UseEmbeddingsPrompt);
+            foreach (var item in data)
+            {
+                stringBuilder.Append(item.Title);
+                stringBuilder.Append(": ");
+                stringBuilder.Append(item.Content);
+                stringBuilder.AppendLine();
+            }
+            conversation.Add(new(ChatRole.User, stringBuilder.ToString()));
+        }
         conversation.Add(new(ChatRole.User, message));
         if (imagePath != null)
         {

@@ -1,22 +1,8 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
+﻿namespace AiChatSample;
 
-namespace AiChatSample;
-
-public record class AiChatSampleSettings(
-    Uri OllamaEndpointUri,
-    string AiModelId,
-    string SystemPrompt = ""
-    )
-{ }
-
-public static class AiChatSampleSettingsExtensions
+public record class AiChatSampleSettings
 {
-    public static void AddAiChatSampleSettingsAsSingleton(this IServiceCollection services)
-    {
-        services.AddSingleton(static sp => sp.GetRequiredService<IConfiguration>()
-                .GetRequiredSection(nameof(AiChatSampleSettings))
-                .Get<AiChatSampleSettings>() ?? throw new InvalidOperationException($"Invalid configuration for '{nameof(AiChatSampleSettings)}'")
-            );
-    }
+    public Uri OllamaEndpointUri { get; init; } = new Uri("http://localhost/");
+    public string AiModelId { get; init; } = "";
+    public string SystemPrompt { get; init; } = "";
 }
