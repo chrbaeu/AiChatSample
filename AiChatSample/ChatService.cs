@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Extensions.AI;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using System.ComponentModel;
 using System.Globalization;
@@ -11,12 +12,11 @@ public class ChatService(
         IMessenger messenger,
         IChatClient chatClient,
         ThemeService themeService,
-        EmbeddingService embeddingService,
         IOptions<AiChatSampleSettings> settings,
-        IOptions<EmbeddingsSampleSettings> embeddingsSettings
+        IServiceProvider serviceProvider
     )
 {
-    private readonly List<ChatMessage> conversation = string.IsNullOrEmpty(settings.Value.SystemPrompt) ? [] : [new ChatMessage(ChatRole.System, settings.Value.SystemPrompt)];
+    private readonly List<ChatMessage> conversation = string.IsNullOrEmpty(settings.Value.ChatModelSystemPrompt) ? [] : [new ChatMessage(ChatRole.System, settings.Value.ChatModelSystemPrompt)];
 
     public IEnumerable<ChatMessage> Messages => conversation.Where(m => (m.Role == ChatRole.User || m.Role == ChatRole.Assistant) && !string.IsNullOrEmpty(m.ToString()));
 
@@ -24,42 +24,47 @@ public class ChatService(
     {
         if (useEmbeddings)
         {
-            var data = await embeddingService.Search(message);
+            List<DataItem> data = await serviceProvider.GetRequiredService<EmbeddingService>().Search(message);
             StringBuilder stringBuilder = new();
-            stringBuilder.AppendLine(embeddingsSettings.Value.UseEmbeddingsPrompt);
-            foreach (var item in data)
+            stringBuilder.AppendLine(settings.Value.UseEmbeddingsPrompt);
+            foreach (DataItem item in data)
             {
                 stringBuilder.Append(item.Title);
                 stringBuilder.Append(": ");
                 stringBuilder.Append(item.Content);
                 stringBuilder.AppendLine();
             }
-            conversation.Add(new(ChatRole.User, stringBuilder.ToString()));
+            conversation.Add(new(ChatRole.Tool, stringBuilder.ToString()));
+        }
+        ChatOptions chatOptions = new();
+        if (temperature.HasValue)
+        {
+            chatOptions.Temperature = temperature.Value;
         }
         conversation.Add(new(ChatRole.User, message));
+        messenger.Send(conversation);
         if (imagePath != null)
         {
-            conversation.Add(new(ChatRole.User, [new ImageContent(ImageProcessor.ConvertBitmapSourceToByteArray(ImageProcessor.GetDownscaledImage(imagePath, 512)))]));
+            List<ChatMessage> visionConversation = string.IsNullOrEmpty(settings.Value.VisionModelSystemPrompt) ? [] : [new ChatMessage(ChatRole.System, settings.Value.VisionModelSystemPrompt)];
+            visionConversation.Add(new(ChatRole.User, message));
+            visionConversation.Add(new(ChatRole.User, [new ImageContent(ImageProcessor.ConvertBitmapSourceToByteArray(ImageProcessor.GetDownscaledImage(imagePath, 512)))]));
+            IChatClient visionClient = serviceProvider.GetRequiredKeyedService<IChatClient>("Vision");
+            ChatCompletion response = await visionClient.CompleteAsync(visionConversation, chatOptions);
+            conversation.Add(response.Message);
+            messenger.Send(conversation);
+            return;
         }
-        messenger.Send(conversation);
-        ChatOptions chatOptions = new();
-        if (useTools)
+        else if (useTools)
         {
             chatOptions.Tools = [
                 AIFunctionFactory.Create(GetTime),
                 AIFunctionFactory.Create(themeService.SetDarkMode),
                 AIFunctionFactory.Create(themeService.IsDarkMode)
-                ];
-        }
-        if (temperature.HasValue)
-        {
-            chatOptions.Temperature = temperature.Value;
-        }
-        if (useTools)
-        {
+            ];
             ChatCompletion response = await chatClient.CompleteAsync(conversation, chatOptions);
             conversation.Add(response.Message);
             messenger.Send(conversation);
+            return;
         }
         else
         {

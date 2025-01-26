@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Extensions.AI;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
@@ -16,31 +17,45 @@ public partial class App : Application
     public App()
     {
         HostApplicationBuilder builder = Host.CreateApplicationBuilder();
-        builder.Services.AddSingleton<IMessenger>(WeakReferenceMessenger.Default);
-
+        AiChatSampleSettings settings = builder.Configuration.GetRequiredSection(nameof(AiChatSampleSettings)).Get<AiChatSampleSettings>() ?? new();
         builder.Services.AddOptions<AiChatSampleSettings>().BindConfiguration(nameof(AiChatSampleSettings)).ValidateOnStart();
+
+        // Chat
         builder.Services.AddChatClient(builder =>
         {
             AiChatSampleSettings settings = builder.GetRequiredService<IOptions<AiChatSampleSettings>>().Value;
-            return new OllamaChatClient(settings.OllamaEndpointUri, modelId: settings.AiModelId);
+            return new OllamaChatClient(settings.OllamaEndpointUri, modelId: settings.ChatModelId);
         }).UseFunctionInvocation();
 
-        builder.Services.AddOptions<EmbeddingsSampleSettings>().BindConfiguration(nameof(EmbeddingsSampleSettings)).ValidateOnStart().Configure(x =>
+        // Vision
+        if (settings.VisionModelId is string { Length: > 0 })
         {
+            builder.Services.AddKeyedChatClient("Vision", builder =>
+            {
+                AiChatSampleSettings settings = builder.GetRequiredService<IOptions<AiChatSampleSettings>>().Value;
+                return new OllamaChatClient(settings.OllamaEndpointUri, modelId: settings.VisionModelId);
+            }).UseFunctionInvocation();
+        }
 
-        });
-        builder.Services.AddSingleton<IVectorStore, InMemoryVectorStore>();
-        builder.Services.AddEmbeddingGenerator<string, Embedding<float>>(builder =>
+        // Embeddings
+        if (settings.EmbeddingsModelId is string { Length: > 0 })
         {
-            EmbeddingsSampleSettings settings = builder.GetRequiredService<IOptions<EmbeddingsSampleSettings>>().Value;
-            return new OllamaEmbeddingGenerator(settings.OllamaEndpointUri, modelId: settings.EmbeddingsModelId);
-        });
-        builder.Services.AddSingleton<EmbeddingService>();
-        builder.Services.AddHostedService<EmbeddingService>(x => x.GetRequiredService<EmbeddingService>());
+            builder.Services.AddSingleton<IVectorStore, InMemoryVectorStore>();
+            builder.Services.AddEmbeddingGenerator<string, Embedding<float>>(builder =>
+            {
+                AiChatSampleSettings settings = builder.GetRequiredService<IOptions<AiChatSampleSettings>>().Value;
+                return new OllamaEmbeddingGenerator(settings.OllamaEndpointUri, modelId: settings.EmbeddingsModelId);
+            });
+            builder.Services.AddSingleton<EmbeddingService>();
+            builder.Services.AddHostedService<EmbeddingService>(x => x.GetRequiredService<EmbeddingService>());
+        }
 
+        // Services
+        builder.Services.AddSingleton<IMessenger>(WeakReferenceMessenger.Default);
         builder.Services.AddSingleton<ThemeService>();
         builder.Services.AddScoped<ChatService>();
 
+        // Views & ViewModels
         builder.Services.AddScoped<MainWindowViewModel>();
         builder.Services.AddScoped<MainWindow>();
 

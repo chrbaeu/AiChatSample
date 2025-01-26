@@ -8,17 +8,16 @@ using System.Text.Json;
 namespace AiChatSample;
 
 public class EmbeddingService(
-    IOptions<EmbeddingsSampleSettings> settings,
+    IOptions<AiChatSampleSettings> settings,
     IVectorStore vectorStore,
     IEmbeddingGenerator<string, Embedding<float>> generator
     ) : IHostedService
 {
-
     public async Task<List<DataItem>> Search(string query)
     {
         ReadOnlyMemory<float> queryEmbedding = await generator.GenerateEmbeddingVectorAsync(query);
-        VectorSearchOptions searchOptions = new() { Top = 3, VectorPropertyName = "Vector" };
-        IVectorStoreRecordCollection<Guid, DataItem> data = vectorStore.GetCollection<Guid, DataItem>("data");
+        VectorSearchOptions searchOptions = new() { Top = settings.Value.MaxEmbeddings, VectorPropertyName = "Vector" };
+        IVectorStoreRecordCollection<string, DataItem> data = vectorStore.GetCollection<string, DataItem>("data");
         VectorSearchResults<DataItem> results = await data.VectorizedSearchAsync(queryEmbedding, searchOptions);
         List<DataItem> dataItems = [];
         await foreach (VectorSearchResult<DataItem> result in results.Results)
@@ -44,7 +43,7 @@ public class EmbeddingService(
     private async Task InitVectorStore()
     {
         List<DataItem> dataItems = JsonSerializer.Deserialize<List<DataItem>>(File.ReadAllText(settings.Value.EmbeddingsDataFilePath)) ?? [];
-        IVectorStoreRecordCollection<Guid, DataItem> data = vectorStore.GetCollection<Guid, DataItem>("data");
+        IVectorStoreRecordCollection<string, DataItem> data = vectorStore.GetCollection<string, DataItem>("data");
         await data.CreateCollectionIfNotExistsAsync();
         foreach (DataItem item in dataItems)
         {

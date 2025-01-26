@@ -4,7 +4,7 @@ namespace AiChatSample;
 public class DataItem
 {
     [VectorStoreRecordKey]
-    public Guid Key { get; set; }
+    public string Key { get; set; } = "";
 
     [VectorStoreRecordData]
     public string Title { get; set; } = "";

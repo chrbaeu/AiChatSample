@@ -1,12 +1,14 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.Extensions.Options;
 using Microsoft.Win32;
 using System.Windows.Media.Imaging;
 
 namespace AiChatSample;
 
 public partial class MainWindowViewModel(
-    ChatService chatService
+    ChatService chatService,
+    IOptions<AiChatSampleSettings> settings
     ) : ObservableObject
 {
     [ObservableProperty]
@@ -19,6 +21,9 @@ public partial class MainWindowViewModel(
     public partial bool UseEmbeddings { get; set; }
 
     [ObservableProperty]
+    public partial bool EnableUseEmbeddings { get; set; } = settings.Value.EmbeddingsModelId is string { Length: > 0 };
+
+    [ObservableProperty]
     public partial string Temperature { get; set; } = "";
 
     [ObservableProperty]
@@ -26,6 +31,9 @@ public partial class MainWindowViewModel(
 
     [ObservableProperty]
     public partial BitmapSource? Image { get; set; }
+
+    [ObservableProperty]
+    public partial bool EnableUseVision { get; set; } = settings.Value.VisionModelId is string { Length: > 0 };
 
     [RelayCommand]
     private async Task SendMessage()

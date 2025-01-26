@@ -1,0 +1,102 @@
+[
+  {
+    "Key": "c1a0b4d9-7431-4c72-a1c9-eca9d32c6ef1",
+    "Title": "Apfel",
+    "Content": "Ein knackiger, saftiger Apfel mit einer erfrischend süß-säuerlichen Note, perfekt als gesunder Snack."
+  },
+  {
+    "Key": "d925a843-93b7-4b6a-8092-275217c78911",
+    "Title": "Vollkornbrot",
+    "Content": "Ein nahrhaftes Vollkornbrot mit einem herzhaften, leicht nussigen Geschmack, reich an Ballaststoffen."
+  },
+  {
+    "Key": "58c53b80-f465-4527-bf7c-30ecfb67e1e5",
+    "Title": "Lachsfilet",
+    "Content": "Frisches Lachsfilet mit einem milden, buttrigen Geschmack, ideal zum Grillen oder Braten."
+  },
+  {
+    "Key": "426f9d9a-06dc-4b92-8561-d8fa4f91ad6b",
+    "Title": "Mandeln",
+    "Content": "Geröstete Mandeln mit einem nussigen, leicht süßlichen Aroma, eine ausgezeichnete Proteinquelle."
+  },
+  {
+    "Key": "7dff4b70-4f99-4c2d-82a5-f5f25ed6cb5e",
+    "Title": "Mozzarella",
+    "Content": "Frischer Mozzarella mit einem milden, cremigen Geschmack, ideal für Salate und Pizza."
+  },
+  {
+    "Key": "05e239f4-1a0d-4230-bc56-65a632f63c19",
+    "Title": "Karotten",
+    "Content": "Frische, knackige Karotten mit einem süßlichen, erdigen Geschmack, ideal für Salate oder als Snack."
+  },
+  {
+    "Key": "16b657ba-6f36-41d7-bdcb-54de7616d71d",
+    "Title": "Schokolade",
+    "Content": "Zartschmelzende Vollmilchschokolade mit einem süßen, cremigen und leicht karamelligen Geschmack."
+  },
+  {
+    "Key": "e1b86afc-7ab7-4263-a3f3-dc8a3ad50a5c",
+    "Title": "Orangensaft",
+    "Content": "Frisch gepresster Orangensaft mit einem fruchtigen, süß-säuerlichen Geschmack, reich an Vitamin C."
+  },
+  {
+    "Key": "02e5c77a-45df-4a8b-9f90-0d9a04d10c8e",
+    "Title": "Reis",
+    "Content": "Langkörniger Basmatireis mit einem milden, leicht nussigen Aroma, ideal als Beilage oder Hauptgericht."
+  },
+  {
+    "Key": "5c1d6c41-23d7-414f-bc68-b4b3c9d4aaaf",
+    "Title": "Tomatensauce",
+    "Content": "Aromatische Tomatensauce mit einem würzigen, leicht süß-säuerlichen Geschmack, perfekt für Pasta-Gerichte."
+  },
+  {
+    "Key": "9b8431a1-62a2-46c1-a8ec-2c48c7bdc3af",
+    "Title": "Erdnussbutter",
+    "Content": "Cremige Erdnussbutter mit einem intensiven, leicht salzigen und nussigen Geschmack, ideal für Brot oder Smoothies."
+  },
+  {
+    "Key": "cf6a6bfc-3b88-44b0-8fc5-e54f2ae8c7ff",
+    "Title": "Hähnchenbrust",
+    "Content": "Magere Hähnchenbrust mit einem zarten, milden Geschmack, ideal für eine proteinreiche Ernährung."
+  },
+  {
+    "Key": "f4f9a9ea-b18f-4652-89f1-d2f5a3c919cd",
+    "Title": "Joghurt",
+    "Content": "Naturjoghurt ohne Zuckerzusatz mit einem cremigen, leicht säuerlichen Geschmack, perfekt für Frühstück und Desserts."
+  },
+  {
+    "Key": "47e66d2c-32b4-485f-a91e-5e2f8f90eb80",
+    "Title": "Avocado",
+    "Content": "Cremige Avocado mit einem milden, butterartigen Geschmack, ideal für Salate und Aufstriche."
+  },
+  {
+    "Key": "2d0eeb22-28d8-4bde-9219-eedc593c3d4b",
+    "Title": "Käse",
+    "Content": "Aromatischer Gouda-Käse mit einem mild-würzigen und cremigen Geschmack, ideal für Sandwiches und Snacks."
+  },
+  {
+    "Key": "a5ec2233-5a85-45d5-b12c-5ae0e5cd3e82",
+    "Title": "Honig",
+    "Content": "Natürlicher Blütenhonig mit einem süßen, blumigen Geschmack, perfekt als Süßungsmittel."
+  },
+  {
+    "Key": "03bcb47d-36f1-4d2a-9f75-d2f1f2bd267a",
+    "Title": "Banane",
+    "Content": "Reife Banane mit einem süßen, cremigen und leicht tropischen Geschmack, ein schneller und gesunder Energiespender."
+  },
+  {
+    "Key": "bf7865c4-8657-4d77-87c2-22903dbf5bcb",
+    "Title": "Nudeln",
+    "Content": "Traditionelle Spaghetti aus Hartweizengrieß mit einem neutralen, leicht nussigen Geschmack, der perfekt Saucen aufnimmt."
+  },
+  {
+    "Key": "5e6b3f9d-7e24-495c-ae3e-8c6c73693b5e",
+    "Title": "Kartoffeln",
+    "Content": "Frische Kartoffeln mit einem erdigen, milden Geschmack, ideal für Püree, Pommes oder Eintöpfe."
+  },
+  {
+    "Key": "d7ac1d59-531f-4621-a90b-4e0d3a1b6f6a",
+    "Title": "Trauben",
+    "Content": "Saftige, kernlose Trauben mit einem süßen, fruchtigen Geschmack, perfekt als Snack."
+  }
+]
