@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net9.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="DevExpress.AIIntegration.Ollama.de" Version="24.2.1-alpha-24260" />
+    <PackageReference Include="DevExpress.AIIntegration.Wpf.de" Version="24.2.3" />
+    <PackageReference Include="DevExpress.Wpf.de" Version="24.2.3" />
+    <PackageReference Include="Microsoft.Extensions.AI.Ollama" Version="9.1.0-preview.1.25064.3" />
+  </ItemGroup>
+
+</Project>

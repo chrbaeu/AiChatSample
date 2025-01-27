@@ -1,0 +1,34 @@
+﻿<Window
+    x:Class="WpfDxAI.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
+    xmlns:dxai="http://schemas.devexpress.com/winfx/2008/xaml/ai"
+    xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
+    xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
+    xmlns:dxre="http://schemas.devexpress.com/winfx/2008/xaml/richedit"
+    xmlns:local="clr-namespace:WpfDxAI"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Title="MainWindow"
+    Width="1280"
+    Height="768"
+    mc:Ignorable="d">
+    <Grid>
+        <dxre:RichEditControl CommandBarStyle="Ribbon">
+            <dxmvvm:Interaction.Behaviors>
+                <dxai:ExpandBehavior />
+                <dxai:ShortenBehavior />
+                <dxai:SummarizeBehavior />
+                <dxai:ExplainBehavior />
+                <dxai:ChangeStyleBehavior x:Name="ChangeStyle"/>
+                <dxai:ProofreadBehavior x:Name="Proofread"/>
+                <dxai:TranslateBehavior x:Name="Translate">
+                    <dxai:LanguageInfo Culture="de-DE"/>
+                    <dxai:LanguageInfo Culture="en-US"/>
+                </dxai:TranslateBehavior>
+                <dxai:CustomRequestBehavior/>
+            </dxmvvm:Interaction.Behaviors>
+        </dxre:RichEditControl>
+    </Grid>
+</Window>
