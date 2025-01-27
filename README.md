@@ -1,7 +1,7 @@
 # AiChatSample
 An local AI chat example written in C# with WPF and Blazor.
 
-![Logo](https://raw.githubusercontent.com/chrbaeu/AiChatSample/refs/heads/main/AiChatSample/Screenshot.png)
+![Logo](https://raw.githubusercontent.com/chrbaeu/AiChatSample/refs/heads/main/Screenshot.png)
 
 Microsoft has simplified the use of AI models in C# with the [Microsoft.Extensions.AI](https://devblogs.microsoft.com/dotnet/introducing-microsoft-extensions-ai-preview/) NuGet package.
 
@@ -14,4 +14,4 @@ The example also shows how tool calling works by providing the model with a func
 
 As more advanced features, the sample also includes the integration of a vision model for image analysis and the option to provide data as embeddings used in that chat as additional context.
 
-![Logo](https://raw.githubusercontent.com/chrbaeu/AiChatSample/refs/heads/main/AiChatSample/Screenshots.png)
+![Logo](https://raw.githubusercontent.com/chrbaeu/AiChatSample/refs/heads/main/Screenshots.png)
