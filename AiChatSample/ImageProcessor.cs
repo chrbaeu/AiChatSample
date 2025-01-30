@@ -30,6 +30,16 @@ public class ImageProcessor
         return ms.ToArray();
     }
 
+    public static byte[] ConvertBitmapSourceToJpegByteArray(BitmapSource bitmap)
+    {
+        ArgumentNullException.ThrowIfNull(bitmap);
+        using MemoryStream ms = new();
+        JpegBitmapEncoder encoder = new();
+        encoder.Frames.Add(BitmapFrame.Create(bitmap));
+        encoder.Save(ms);
+        return ms.ToArray();
+    }
+
     private static TransformedBitmap ResizeBitmap(BitmapSource sourceBitmap, int maxSize)
     {
         double scale = Math.Min(maxSize / (double)sourceBitmap.PixelWidth, maxSize / (double)sourceBitmap.PixelHeight);

@@ -21,7 +21,7 @@
         @foreach (var message in ChatService.Messages)
         {
             <div class="chat-message @(message.Role == ChatRole.User ? "user-message" : "ai-message")">
-                <p>@message.ToString()</p>
+                <p>@((MarkupString)message.ToString().Replace("\n", "<br/>"))</p>
             </div>
         }
     </div>

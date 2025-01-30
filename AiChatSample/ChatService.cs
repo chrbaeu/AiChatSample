@@ -45,9 +45,11 @@ public class ChatService(
         messenger.Send(conversation);
         if (imagePath != null)
         {
+            conversation.Add(new(ChatRole.User, imagePath));
+            messenger.Send(conversation);
             List<ChatMessage> visionConversation = string.IsNullOrEmpty(settings.Value.VisionModelSystemPrompt) ? [] : [new ChatMessage(ChatRole.System, settings.Value.VisionModelSystemPrompt)];
             visionConversation.Add(new(ChatRole.User, message));
-            visionConversation.Add(new(ChatRole.User, [new ImageContent(ImageProcessor.ConvertBitmapSourceToByteArray(ImageProcessor.GetDownscaledImage(imagePath, 512)))]));
+            visionConversation.Add(new(ChatRole.User, [new ImageContent(ImageProcessor.ConvertBitmapSourceToJpegByteArray(ImageProcessor.GetDownscaledImage(imagePath, 672)))]));
             IChatClient visionClient = serviceProvider.GetRequiredKeyedService<IChatClient>("Vision");
             ChatCompletion response = await visionClient.CompleteAsync(visionConversation, chatOptions);
             conversation.Add(response.Message);

@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.Options;
 using Microsoft.Win32;
+using System.IO;
 using System.Windows.Media.Imaging;
 
 namespace AiChatSample;
@@ -52,9 +53,11 @@ public partial class MainWindowViewModel(
     [RelayCommand]
     private void LoadImage()
     {
+        var initialDirectory = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, @"..\..\..\SampleData"));
         OpenFileDialog openFileDialog = new()
         {
-            Filter = "Image files (*.bmp;*.png;*.jpg)|*.bmp,*.png;*.jpg;*.jpeg|All files (*.*)|*.*"
+            InitialDirectory = initialDirectory,
+            Filter = "Image files (*.bmp;*.png;*.jpg)|*.bmp;*.png;*.jpg;*.jpeg|All files (*.*)|*.*"
         };
         if (openFileDialog.ShowDialog() == true)
         {
