@@ -1,17 +1,18 @@
 ﻿using Microsoft.Extensions.VectorData;
 
 namespace AiChatSample;
+
 public class DataItem
 {
-    [VectorStoreRecordKey]
+    [VectorStoreKey]
     public string Key { get; set; } = "";
 
-    [VectorStoreRecordData]
+    [VectorStoreData]
     public string Title { get; set; } = "";
 
-    [VectorStoreRecordData]
+    [VectorStoreData]
     public string Content { get; set; } = "";
 
-    [VectorStoreRecordVector(384, DistanceFunction.CosineSimilarity)]
+    [VectorStoreVector(512, DistanceFunction = DistanceFunction.CosineSimilarity)]
     public ReadOnlyMemory<float> Vector { get; set; }
 }

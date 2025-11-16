@@ -6,6 +6,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.VectorData;
 using Microsoft.SemanticKernel.Connectors.InMemory;
+using OllamaSharp;
 using System.Windows;
 
 namespace AiChatSample;
@@ -24,7 +25,7 @@ public partial class App : Application
         builder.Services.AddChatClient(builder =>
         {
             AiChatSampleSettings settings = builder.GetRequiredService<IOptions<AiChatSampleSettings>>().Value;
-            return new OllamaChatClient(settings.OllamaEndpointUri, modelId: settings.ChatModelId);
+            return new OllamaApiClient(settings.OllamaEndpointUri, settings.ChatModelId);
         }).UseFunctionInvocation();
 
         // Vision
@@ -33,18 +34,18 @@ public partial class App : Application
             builder.Services.AddKeyedChatClient("Vision", builder =>
             {
                 AiChatSampleSettings settings = builder.GetRequiredService<IOptions<AiChatSampleSettings>>().Value;
-                return new OllamaChatClient(settings.OllamaEndpointUri, modelId: settings.VisionModelId);
+                return new OllamaApiClient(settings.OllamaEndpointUri, settings.VisionModelId);
             }).UseFunctionInvocation();
         }
 
         // Embeddings
         if (settings.EmbeddingsModelId is string { Length: > 0 })
         {
-            builder.Services.AddSingleton<IVectorStore, InMemoryVectorStore>();
+            builder.Services.AddSingleton<VectorStore, InMemoryVectorStore>();
             builder.Services.AddEmbeddingGenerator<string, Embedding<float>>(builder =>
             {
                 AiChatSampleSettings settings = builder.GetRequiredService<IOptions<AiChatSampleSettings>>().Value;
-                return new OllamaEmbeddingGenerator(settings.OllamaEndpointUri, modelId: settings.EmbeddingsModelId);
+                return new OllamaApiClient(settings.OllamaEndpointUri, settings.EmbeddingsModelId);
             });
             builder.Services.AddSingleton<EmbeddingService>();
             builder.Services.AddHostedService<EmbeddingService>(x => x.GetRequiredService<EmbeddingService>());

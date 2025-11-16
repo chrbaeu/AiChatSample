@@ -36,6 +36,7 @@ public class ChatService(
             }
             conversation.Add(new(ChatRole.Tool, stringBuilder.ToString()));
         }
+        var choosenChatClient = chatClient;
         ChatOptions chatOptions = new();
         if (temperature.HasValue)
         {
@@ -45,39 +46,26 @@ public class ChatService(
         messenger.Send(conversation);
         if (imagePath != null)
         {
-            conversation.Add(new(ChatRole.User, imagePath));
-            messenger.Send(conversation);
-            List<ChatMessage> visionConversation = string.IsNullOrEmpty(settings.Value.VisionModelSystemPrompt) ? [] : [new ChatMessage(ChatRole.System, settings.Value.VisionModelSystemPrompt)];
-            visionConversation.Add(new(ChatRole.User, message));
-            visionConversation.Add(new(ChatRole.User, [new ImageContent(ImageProcessor.ConvertBitmapSourceToJpegByteArray(ImageProcessor.GetDownscaledImage(imagePath, 672)))]));
-            IChatClient visionClient = serviceProvider.GetRequiredKeyedService<IChatClient>("Vision");
-            ChatCompletion response = await visionClient.CompleteAsync(visionConversation, chatOptions);
-            conversation.Add(response.Message);
-            messenger.Send(conversation);
-            return;
+            conversation[^1].Contents.Add(new DataContent(ImageProcessor.ConvertBitmapSourceToJpegByteArray(ImageProcessor.GetDownscaledImage(imagePath, 512)), "image/jpeg"));
         }
-        else if (useTools)
+        if (conversation.Any(x => x.Role == ChatRole.User && x.Contents.Any()))
+        {
+            choosenChatClient = serviceProvider.GetRequiredKeyedService<IChatClient>("Vision");
+        }
+        if (useTools)
         {
             chatOptions.Tools = [
                 AIFunctionFactory.Create(GetTime),
                 AIFunctionFactory.Create(themeService.SetDarkMode),
                 AIFunctionFactory.Create(themeService.IsDarkMode)
             ];
-            ChatCompletion response = await chatClient.CompleteAsync(conversation, chatOptions);
-            conversation.Add(response.Message);
-            messenger.Send(conversation);
-            return;
         }
-        else
+        conversation.Add(new(ChatRole.Assistant, ""));
+        messenger.Send(conversation);
+        await foreach (var response in choosenChatClient.GetStreamingResponseAsync(conversation, chatOptions))
         {
-            ChatMessage responseMessage = new(ChatRole.Assistant, "");
-            conversation.Add(responseMessage);
+            conversation[^1] = new(ChatRole.Assistant, conversation[^1].Text + response.Text);
             messenger.Send(conversation);
-            await foreach (StreamingChatCompletionUpdate response in chatClient.CompleteStreamingAsync(conversation, chatOptions))
-            {
-                responseMessage.Text += response.Text;
-                messenger.Send(conversation);
-            }
         }
     }
 

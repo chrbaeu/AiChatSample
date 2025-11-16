@@ -9,18 +9,16 @@ namespace AiChatSample;
 
 public class EmbeddingService(
     IOptions<AiChatSampleSettings> settings,
-    IVectorStore vectorStore,
+    VectorStore vectorStore,
     IEmbeddingGenerator<string, Embedding<float>> generator
     ) : IHostedService
 {
     public async Task<List<DataItem>> Search(string query)
     {
-        ReadOnlyMemory<float> queryEmbedding = await generator.GenerateEmbeddingVectorAsync(query);
-        VectorSearchOptions searchOptions = new() { Top = settings.Value.MaxEmbeddings, VectorPropertyName = "Vector" };
-        IVectorStoreRecordCollection<string, DataItem> data = vectorStore.GetCollection<string, DataItem>("data");
-        VectorSearchResults<DataItem> results = await data.VectorizedSearchAsync(queryEmbedding, searchOptions);
+        var embedding = await generator.GenerateAsync(query, new EmbeddingGenerationOptions() { Dimensions = 512 });
+        var data = vectorStore.GetCollection<string, DataItem>("data");
         List<DataItem> dataItems = [];
-        await foreach (VectorSearchResult<DataItem> result in results.Results)
+        await foreach (VectorSearchResult<DataItem> result in data.SearchAsync(embedding.Vector, 5))
         {
             if (result.Score > 0.05)
             {
@@ -43,11 +41,11 @@ public class EmbeddingService(
     private async Task InitVectorStore()
     {
         List<DataItem> dataItems = JsonSerializer.Deserialize<List<DataItem>>(File.ReadAllText(settings.Value.EmbeddingsDataFilePath)) ?? [];
-        IVectorStoreRecordCollection<string, DataItem> data = vectorStore.GetCollection<string, DataItem>("data");
-        await data.CreateCollectionIfNotExistsAsync();
+        var data = vectorStore.GetCollection<string, DataItem>("data");
+        await data.EnsureCollectionExistsAsync();
         foreach (DataItem item in dataItems)
         {
-            item.Vector = await generator.GenerateEmbeddingVectorAsync(item.Title + "\n" + item.Content);
+            item.Vector = await generator.GenerateVectorAsync(item.Title + "\n" + item.Content, new EmbeddingGenerationOptions() { Dimensions = 512 });
             await data.UpsertAsync(item);
         }
     }

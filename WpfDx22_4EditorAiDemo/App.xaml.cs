@@ -18,7 +18,7 @@ public partial class App : System.Windows.Application
         Thread.CurrentThread.CurrentCulture = culture;
         CultureInfo.DefaultThreadCurrentCulture = culture;
         CultureInfo.DefaultThreadCurrentUICulture = culture;
-        IChatClient asChatClient = new OllamaChatClient(new Uri("http://localhost:11434/"), "llama3.1:8b");
+        IChatClient asChatClient = new OllamaChatClient(new Uri("http://localhost:11434/"), "gemma3:12b");
         AIExtensionsContainerDesktop.Default.RegisterChatClient(asChatClient);
     }
 
