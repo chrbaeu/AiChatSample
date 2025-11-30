@@ -48,7 +48,7 @@ public class ChatService(
         {
             conversation[^1].Contents.Add(new DataContent(ImageProcessor.ConvertBitmapSourceToJpegByteArray(ImageProcessor.GetDownscaledImage(imagePath, 512)), "image/jpeg"));
         }
-        if (conversation.Any(x => x.Role == ChatRole.User && x.Contents.Any()))
+        if (conversation.Any(x => x.Role == ChatRole.User && x.Contents.Any(x => x is DataContent { MediaType: "image/jpeg" })))
         {
             choosenChatClient = serviceProvider.GetRequiredKeyedService<IChatClient>("Vision");
         }
@@ -65,7 +65,7 @@ public class ChatService(
         await foreach (var response in choosenChatClient.GetStreamingResponseAsync(conversation, chatOptions))
         {
             conversation[^1] = new(ChatRole.Assistant, conversation[^1].Text + response.Text);
-            messenger.Send(conversation);
+            messenger.Send(conversation.ToList());
         }
     }
 
