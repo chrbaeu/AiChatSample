@@ -26,6 +26,7 @@
                           SessionId="@sessionId"
                           Placeholder="Stelle eine Frage ..."
                           EmptyMessage="Keine Nachrichten. Starte einen neuen Chat."
+                          ApiKeyHeader="@(useEmbeddings ? "UseEmbeddings" : null)"
                           Model="@selectedModel"
                           SystemPrompt="@systemPrompt" />
         </RadzenTabsItem>
@@ -41,7 +42,15 @@
                 <RadzenLabel Text="Systemprompt:" Component="TextArea" />
                 <RadzenTextArea @bind-Value="systemPrompt"
                                 Rows="10"
-                                Style="width:100%" />
+                                Style="width:100%;" />
+
+                <RadzenCheckBox @bind-Value="useEmbeddings"
+                                TValue="bool"
+                                TriState="false"
+                                Style="margin-top:1rem;margin-bottom:1rem;" />
+                <RadzenLabel Text="RAG / Embeddings verwenden"
+                             Component="CheckBox"
+                             Style="margin-left:0.5rem;margin-top:1rem;margin-bottom:1rem;" />
             </RadzenFieldset>
         </RadzenTabsItem>
     </Tabs>
@@ -49,8 +58,8 @@
 
 @code {
     private List<string> modelle = [];
-
     private string selectedModel = "";
+    private bool useEmbeddings = false;
     private string systemPrompt = "Du bist ein hilfsbereiter Assistent.";
     private string sessionId = Guid.NewGuid().ToString();
 

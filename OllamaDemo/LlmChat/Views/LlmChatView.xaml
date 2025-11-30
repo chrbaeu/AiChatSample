@@ -12,6 +12,7 @@
     <Grid>
         <blazor:BlazorWebView
             x:Name="blazorWebView"
+            BlazorWebViewInitializing="OnBlazorWebViewInitializing"
             HostPage="wwwroot\index.html"
             Services="{DynamicResource services}">
             <blazor:BlazorWebView.RootComponents>

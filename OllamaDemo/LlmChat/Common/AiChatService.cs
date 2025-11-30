@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.AI;
+using OllamaDemo.Shared.Common;
 using Radzen;
 using System.Collections.Concurrent;
 using System.Runtime.CompilerServices;
@@ -6,7 +7,7 @@ using System.Text;
 
 namespace OllamaDemo.LlmChat.Common;
 
-public sealed class AiChatService(IChatClient chatClient, AiChatTools aiChatTools) : IAIChatService
+public sealed class AiChatService(IChatClient chatClient, AiChatTools aiChatTools, RagService ragService) : IAIChatService
 {
     private readonly ConcurrentDictionary<string, ConversationSession> _sessions = new();
 
@@ -65,6 +66,21 @@ public sealed class AiChatService(IChatClient chatClient, AiChatTools aiChatTool
         await Task.CompletedTask.ConfigureAwait(ConfigureAwaitOptions.ForceYielding);
 
         var session = GetOrCreateSession(sessionId);
+
+        if (apiKeyHeader == "UseEmbeddings")
+        {
+            StringBuilder esb = new("The following text is additional context retrieved from a knowledge base. " +
+                    "Use it to answer the question when it is relevant.");
+            esb.AppendLine();
+            await foreach (var embedding in ragService.SearchAsync(userInput, 3))
+            {
+                esb.AppendLine(embedding.Key);
+                esb.AppendLine(embedding.Text);
+                esb.AppendLine();
+            }
+            session.AddMessage("system", esb.ToString());
+        }
+
         session.AddMessage("user", userInput);
         session.LastUpdated = DateTime.UtcNow;
 

@@ -1,7 +1,9 @@
 ﻿using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.AspNetCore.Components.Web;
+using Microsoft.AspNetCore.Components.WebView;
 using Microsoft.Extensions.AI;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Web.WebView2.Core;
 using OllamaDemo.LlmChat.Common;
 using OllamaDemo.Shared.Common;
 using OllamaSharp;
@@ -24,7 +26,8 @@ public partial class LlmChatView : UserControl
         serviceCollection.AddBlazorWebViewDeveloperTools();
 #endif
         serviceCollection.AddRadzenComponents();
-        serviceCollection.AddSingleton<AppSettings>(Program.AppHost?.Services.GetRequiredService<AppSettings>() ?? new());
+        serviceCollection.AddSingleton<AppSettings>(Program.AppHost!.Services.GetRequiredService<AppSettings>());
+        serviceCollection.AddSingleton<RagService>(Program.AppHost!.Services.GetRequiredService<RagService>());
         serviceCollection.AddSingleton<IMessenger>(WeakReferenceMessenger.Default);
         serviceCollection.AddSingleton<IChatClient>(sp =>
         {
@@ -41,5 +44,11 @@ public partial class LlmChatView : UserControl
             Selector = "head::after"
         };
         blazorWebView.RootComponents.Add(rh);
+    }
+
+    private void OnBlazorWebViewInitializing(object? sender, BlazorWebViewInitializingEventArgs e)
+    {
+        e.EnvironmentOptions ??= new CoreWebView2EnvironmentOptions();
+        e.EnvironmentOptions.Language = "de-DE";
     }
 }

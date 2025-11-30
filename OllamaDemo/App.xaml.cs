@@ -27,6 +27,7 @@ public partial class App : Application
         hostApplicationBuilder.Services.AddSingleton(appSettings);
 
         hostApplicationBuilder.Services.AddSingleton<ExcelDataService>();
+        hostApplicationBuilder.Services.AddSingleton<RagService>();
 
         hostApplicationBuilder.Services.AddSingleton<MainViewModel>();
         hostApplicationBuilder.Services.AddSingleton<ExcelDataViewModel>();

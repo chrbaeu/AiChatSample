@@ -10,6 +10,7 @@ namespace OllamaDemo.SemanticSearch.ViewModels;
 public partial class SemanticSearchViewModel(
     IDialogService dialogService,
     ExcelDataService excelDataService,
+    RagService ragService,
     AppSettings appSettings
     ) : ObservableObject, IDisposable
 {
@@ -59,6 +60,7 @@ public partial class SemanticSearchViewModel(
         IsRunning = true;
         try
         {
+            ragService.RagServiceInstance = null;
             searchService?.Dispose();
             searchService = new SemanticSearchService(SelectedModel, appSettings.OllamaEndpointUri);
             await Task.Run(async () =>
@@ -75,6 +77,7 @@ public partial class SemanticSearchViewModel(
                     Progress = (float)x / items.Count * 100;
                 });
             });
+            ragService.RagServiceInstance = searchService;
             IsIndexed = true;
         }
         finally

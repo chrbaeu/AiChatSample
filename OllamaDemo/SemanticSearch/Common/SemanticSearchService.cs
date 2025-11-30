@@ -1,11 +1,12 @@
 ﻿using Microsoft.Extensions.AI;
 using Microsoft.Extensions.VectorData;
 using Microsoft.SemanticKernel.Connectors.InMemory;
+using OllamaDemo.Shared.Common;
 using OllamaSharp;
 
 namespace OllamaDemo.SemanticSearch.Common;
 
-public sealed class SemanticSearchService(string embeddingModelId, Uri ollamaUrl) : IDisposable
+public sealed class SemanticSearchService(string embeddingModelId, Uri ollamaUrl) : IDisposable, IRagService
 {
     private readonly EmbeddingGenerationOptions options = new() { Dimensions = 768 };
     private readonly VectorStore vectorStore = new InMemoryVectorStore();
@@ -35,6 +36,15 @@ public sealed class SemanticSearchService(string embeddingModelId, Uri ollamaUrl
             yield return result;
         }
     }
+
+    public async IAsyncEnumerable<(double Score, string Key, string Text)> SearchAsync(string query, int top = -1)
+    {
+        await foreach (var item in SearchAsync(query, null, top))
+        {
+            yield return (item.Score ?? 0, item.Record.Key, item.Record.Text);
+        }
+    }
+
     public void Dispose()
     {
         vectorStore.Dispose();
