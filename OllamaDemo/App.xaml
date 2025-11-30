@@ -1,0 +1,13 @@
+﻿<Application
+    x:Class="OllamaDemo.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:OllamaDemo"
+    xmlns:shared="clr-namespace:OllamaDemo.Shared.Common"
+    ThemeMode="System">
+    <Application.Resources>
+        <ResourceDictionary>
+            <shared:InverseBoolConverter x:Key="InverseBoolConverter" />
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

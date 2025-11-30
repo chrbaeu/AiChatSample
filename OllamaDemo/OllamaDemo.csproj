@@ -1,0 +1,32 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<TargetFramework>net10.0-windows10.0.22000</TargetFramework>
+		<LangVersion>preview</LangVersion>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<UseWPF>true</UseWPF>
+		<RootNamespace>OllamaDemo</RootNamespace>
+		<StartupObject>OllamaDemo.Program</StartupObject>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<ApplicationDefinition Remove="App.xaml" />
+	</ItemGroup>
+	<ItemGroup>
+		<Page Include="App.xaml" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+		<PackageReference Include="EPPlus" Version="8.3.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.WebView.Wpf" Version="10.0.11" />
+		<PackageReference Include="Microsoft.Extensions.AI" Version="10.0.1" />
+		<PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.0" />
+		<PackageReference Include="Microsoft.SemanticKernel.Connectors.InMemory" Version="1.67.1-preview" />
+		<PackageReference Include="OllamaSharp" Version="5.4.11" />
+		<PackageReference Include="Radzen.Blazor" Version="8.3.4" />
+	</ItemGroup>
+
+</Project>

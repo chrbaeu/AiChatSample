@@ -1,0 +1,77 @@
+﻿@using OllamaDemo.LlmChat.Common
+@using OllamaDemo.Shared.Common
+
+@implements IDisposable
+
+@inject IMessenger Messenger
+@inject ThemeService ThemeService
+@inject AppSettings AppSettings
+
+<HeadContent>
+    <RadzenTheme Theme="@ThemeService.Theme" />
+</HeadContent>
+
+<RadzenComponents />
+
+<style>
+    .rz-tabview-panel {
+        height: 100% !important;
+    }
+</style>
+
+<RadzenTabs Style="height:100%;" TabPosition="TabPosition.Right" RenderMode="TabRenderMode.Client">
+    <Tabs>
+        <RadzenTabsItem Icon="chat">
+            <RadzenAIChat Style="height:100%;"
+                          SessionId="@sessionId"
+                          Placeholder="Stelle eine Frage ..."
+                          EmptyMessage="Keine Nachrichten. Starte einen neuen Chat."
+                          Model="@selectedModel"
+                          SystemPrompt="@systemPrompt" />
+        </RadzenTabsItem>
+
+        <RadzenTabsItem Icon="settings">
+            <RadzenFieldset Text="Einstellungen">
+                <RadzenLabel Text="KI Modell:" Component="DropDown" />
+                <RadzenDropDown @bind-Value="selectedModel"
+                                Data="modelle"
+                                Style="margin-bottom:1rem; width:100%"
+                                Placeholder="KI Modell wählen" />
+
+                <RadzenLabel Text="Systemprompt:" Component="TextArea" />
+                <RadzenTextArea @bind-Value="systemPrompt"
+                                Rows="10"
+                                Style="width:100%" />
+            </RadzenFieldset>
+        </RadzenTabsItem>
+    </Tabs>
+</RadzenTabs>
+
+@code {
+    private List<string> modelle = [];
+
+    private string selectedModel = "";
+    private string systemPrompt = "Du bist ein hilfsbereiter Assistent.";
+    private string sessionId = Guid.NewGuid().ToString();
+
+    protected override void OnInitialized()
+    {
+        modelle = AppSettings.ChatModels;
+        selectedModel = modelle.First();
+        ThemeService.SetTheme("material");
+        Messenger.Register<AiChatToolThemeChangeEvent>(this, OnThemeChanged);
+    }
+
+    private void OnThemeChanged(object recipient, AiChatToolThemeChangeEvent message)
+    {
+        _ = InvokeAsync(() =>
+        {
+            ThemeService.SetTheme(message.DarkModeEnabled ? "material-dark" : "material");
+        });
+    }
+
+    public void Dispose()
+    {
+        Messenger.Unregister<AiChatToolThemeChangeEvent>(this);
+    }
+}

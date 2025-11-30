@@ -1,0 +1,41 @@
+﻿<Window
+    x:Class="OllamaDemo.Shared.Views.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="clr-namespace:OllamaDemo"
+    xmlns:vmLlmChat="clr-namespace:OllamaDemo.LlmChat.Views"
+    xmlns:vmLlmTaskRunner="clr-namespace:OllamaDemo.LlmTaskRunner.Views"
+    xmlns:vmSemanticSearch="clr-namespace:OllamaDemo.SemanticSearch.Views"
+    xmlns:vmShared="clr-namespace:OllamaDemo.Shared.Views"
+    Title="OllamaDemo"
+    Width="1000"
+    Height="700"
+    MinWidth="400"
+    MinHeight="300"
+    d:DataContext="{d:DesignInstance Type={x:Type vm:MainViewModel},
+                                     IsDesignTimeCreatable=False}"
+    mc:Ignorable="d">
+    <Grid Margin="16">
+        <TabControl>
+
+            <TabItem Header="Daten">
+                <vmShared:ExcelDataView DataContext="{Binding ExcelDataViewModel}" />
+            </TabItem>
+
+            <TabItem Header="Semantische Suche">
+                <vmSemanticSearch:SemanticSearchView DataContext="{Binding SemanticSearchViewModel}" />
+            </TabItem>
+
+            <TabItem Header="LLM Tasks">
+                <vmLlmTaskRunner:LlmTaskRunnerView DataContext="{Binding LlmTaskRunnerViewModel}" />
+            </TabItem>
+
+            <TabItem Header="Chat">
+                <vmLlmChat:LlmChatView DataContext="{Binding LlmChatViewModel}" />
+            </TabItem>
+
+        </TabControl>
+    </Grid>
+</Window>
