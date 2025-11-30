@@ -34,12 +34,14 @@ public class ExcelDataService(IMessenger messenger)
         {
             if (ws.Row(row).Hidden) { continue; }
             var dict = new OrderedDictionary<string, string>();
+            int colIndex = 0;
             for (int col = 1; col <= ws.Dimension.End.Column; col++)
             {
                 if (ws.Column(col).Hidden) { continue; }
-                var key = headers[col - 1];
+                var key = headers[colIndex];
                 var value = ws.Cells[row, col].Text.Trim();
                 dict[key] = value;
+                colIndex++;
             }
             result.Add(dict);
         }
