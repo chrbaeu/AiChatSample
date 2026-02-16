@@ -49,3 +49,35 @@ a, .btn-link {
         right: 0.75rem;
         top: 0.5rem;
     }
+
+.rz-text-h1 {
+    font-size: 1.6rem !important;
+}
+
+.rz-text-h2 {
+    font-size: 1.5rem !important;
+}
+
+.rz-text-h3 {
+    font-size: 1.4rem !important;
+}
+
+.rz-text-h4 {
+    font-size: 1.3rem !important;
+}
+
+.rz-text-h5 {
+    font-size: 1.2rem !important;
+}
+
+.rz-text-h6 {
+    font-size: 1.1rem !important;
+}
+
+.rz-text-body1 {
+    font-size: 1rem !important;
+}
+
+.rz-text-body2 {
+    font-size: 0.9rem !important;
+}
