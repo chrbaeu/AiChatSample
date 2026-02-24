@@ -4,7 +4,6 @@ using OllamaDemo.LlmTaskRunner.Common;
 using OllamaDemo.Shared.Common;
 using System.Collections.ObjectModel;
 using System.Data;
-using System.IO;
 
 namespace OllamaDemo.LlmTaskRunner.ViewModels;
 
@@ -76,7 +75,7 @@ public partial class LlmTaskRunnerViewModel(
     private async Task ExportToExcel()
     {
         var filePath = dialogService.ShowSaveFileDialog(null, "Excel Dateien (*.xlsx)|*.xlsx", null, "Export.xlsx");
-        if (!File.Exists(filePath)) { return; }
+        if (filePath is null) { return; }
         try
         {
             tableData.SaveAsExcel(filePath);
