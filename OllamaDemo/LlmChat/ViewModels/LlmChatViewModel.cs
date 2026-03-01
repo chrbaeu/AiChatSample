@@ -1,5 +1,5 @@
 ﻿namespace OllamaDemo.LlmChat.ViewModels;
 
-public class LlmChatViewModel
+public sealed class LlmChatViewModel
 {
 }

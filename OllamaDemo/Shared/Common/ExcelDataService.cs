@@ -3,7 +3,7 @@ using OfficeOpenXml;
 
 namespace OllamaDemo.Shared.Common;
 
-public class ExcelDataService(IMessenger messenger)
+public sealed class ExcelDataService(IMessenger messenger)
 {
     public TableData ExcelData { get; private set; } = new([]);
 

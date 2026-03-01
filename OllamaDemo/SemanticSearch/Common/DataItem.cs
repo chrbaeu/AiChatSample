@@ -2,7 +2,7 @@
 
 namespace OllamaDemo.SemanticSearch.Common;
 
-public class DataItem
+public sealed class DataItem
 {
     [VectorStoreKey]
     public string Key { get; set; } = "";

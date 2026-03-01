@@ -5,7 +5,7 @@ using System.Windows.Media;
 
 namespace OllamaDemo.Shared.Common;
 
-internal sealed class DialogServiceWpf : IDialogService
+public sealed class DialogServiceWpf : IDialogService
 {
     public SynchronizationContext? SynchronizationContext { get; } = SynchronizationContext.Current;
 
@@ -58,7 +58,7 @@ internal sealed class DialogServiceWpf : IDialogService
         return "";
     }
 
-    public Window GetParentWindow(object? instance)
+    public static Window GetParentWindow(object? instance)
     {
         return FindParentWindow(instance as DependencyObject);
     }

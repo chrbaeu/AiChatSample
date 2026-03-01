@@ -4,7 +4,7 @@ using System.Windows;
 
 namespace OllamaDemo;
 
-public static class Program
+internal static class Program
 {
     public static IHost? AppHost { get; private set; }
 

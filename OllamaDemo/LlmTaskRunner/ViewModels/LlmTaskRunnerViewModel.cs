@@ -7,7 +7,7 @@ using System.Data;
 
 namespace OllamaDemo.LlmTaskRunner.ViewModels;
 
-public partial class LlmTaskRunnerViewModel(
+public sealed partial class LlmTaskRunnerViewModel(
     IDialogService dialogService,
     ExcelDataService excelDataService,
     AppSettings appSettings

@@ -4,10 +4,11 @@ using OfficeOpenXml;
 using OllamaDemo.SemanticSearch.Common;
 using OllamaDemo.Shared.Common;
 using System.Collections.ObjectModel;
+using System.Globalization;
 
 namespace OllamaDemo.SemanticSearch.ViewModels;
 
-public partial class SemanticSearchViewModel(
+public sealed partial class SemanticSearchViewModel(
     IDialogService dialogService,
     ExcelDataService excelDataService,
     RagService ragService,
@@ -66,7 +67,7 @@ public partial class SemanticSearchViewModel(
             await Task.Run(async () =>
             {
                 var items = excelDataService.ExcelData.GetRows()
-                .Select(x => x.Select((value, index) => (value, index)).ToDictionary(x => (x.index + 1).ToString(), x => x.value.Value))
+                .Select(x => x.Select((value, index) => (value, index)).ToDictionary(x => (x.index + 1).ToString(CultureInfo.InvariantCulture), x => x.value.Value))
                 .Select(x => new DataItem
                 {
                     Key = KeyColumns.ReplacePlaceholders(x),
@@ -141,7 +142,7 @@ public partial class SemanticSearchViewModel(
     }
 
 
-    public partial class ResultViewModel : ObservableObject
+    public sealed partial class ResultViewModel : ObservableObject
     {
         [ObservableProperty]
         public required partial DataItem Item { get; set; }

@@ -72,10 +72,10 @@ public sealed class AiChatService(IChatClient chatClient, AiChatTools aiChatTool
             StringBuilder esb = new("The following text is additional context retrieved from a knowledge base. " +
                     "Use it to answer the question when it is relevant.");
             esb.AppendLine();
-            await foreach (var embedding in ragService.SearchAsync(userInput, 3))
+            await foreach (var (Score, Key, Text) in ragService.SearchAsync(userInput, 3))
             {
-                esb.AppendLine(embedding.Key);
-                esb.AppendLine(embedding.Text);
+                esb.AppendLine(Key);
+                esb.AppendLine(Text);
                 esb.AppendLine();
             }
             session.AddMessage("system", esb.ToString());

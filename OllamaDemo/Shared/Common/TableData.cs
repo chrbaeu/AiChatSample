@@ -3,10 +3,10 @@ using System.Data;
 
 namespace OllamaDemo.Shared.Common;
 
-public class TableData
+public sealed class TableData
 {
     private readonly List<OrderedDictionary<string, string>> rows = [];
-    private List<string> columns = [];
+    private readonly List<string> columns = [];
 
     public IReadOnlyList<string> Columns => columns;
 
@@ -16,7 +16,7 @@ public class TableData
     {
         ArgumentNullException.ThrowIfNull(rows);
         this.rows = rows;
-        this.columns = rows.SelectMany(d => d.Keys).Distinct().ToList();
+        this.columns = [.. rows.SelectMany(d => d.Keys).Distinct()];
     }
 
     public int RowCount => rows.Count;
@@ -40,7 +40,7 @@ public class TableData
     {
         ArgumentOutOfRangeException.ThrowIfNegative(colum);
         ArgumentOutOfRangeException.ThrowIfNegative(row);
-        ArgumentOutOfRangeException.ThrowIfGreaterThanOrEqual(colum, columns.Count());
+        ArgumentOutOfRangeException.ThrowIfGreaterThanOrEqual(colum, columns.Count);
         ArgumentOutOfRangeException.ThrowIfGreaterThanOrEqual(row, rows.Count);
         var dict = rows[row];
         var key = columns[colum];
@@ -64,7 +64,7 @@ public class TableData
     {
         ArgumentOutOfRangeException.ThrowIfNegative(colum);
         ArgumentOutOfRangeException.ThrowIfNegative(row);
-        ArgumentOutOfRangeException.ThrowIfGreaterThanOrEqual(colum, columns.Count());
+        ArgumentOutOfRangeException.ThrowIfGreaterThanOrEqual(colum, columns.Count);
         ArgumentOutOfRangeException.ThrowIfGreaterThanOrEqual(row, rows.Count);
         var dict = rows[row];
         var key = columns[colum];

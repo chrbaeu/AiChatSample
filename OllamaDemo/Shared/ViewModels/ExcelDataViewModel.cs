@@ -6,7 +6,7 @@ using System.IO;
 
 namespace OllamaDemo.Shared.ViewModels;
 
-public partial class ExcelDataViewModel(IDialogService dialogService, ExcelDataService excelDataService) : ObservableObject
+public sealed partial class ExcelDataViewModel(IDialogService dialogService, ExcelDataService excelDataService) : ObservableObject
 {
     [ObservableProperty]
     public partial DataView ExcelDataView { get; private set; } = new();

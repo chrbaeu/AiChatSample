@@ -6,7 +6,7 @@ using OllamaSharp;
 
 namespace OllamaDemo.SemanticSearch.Common;
 
-public sealed class SemanticSearchService(string embeddingModelId, Uri ollamaUrl) : IDisposable, IRagService
+internal sealed class SemanticSearchService(string embeddingModelId, Uri ollamaUrl) : IDisposable, IRagService
 {
     private readonly EmbeddingGenerationOptions options = new() { Dimensions = 768 };
     private readonly VectorStore vectorStore = new InMemoryVectorStore();

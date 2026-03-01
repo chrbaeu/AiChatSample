@@ -5,7 +5,7 @@ public interface IRagService
     public IAsyncEnumerable<(double Score, string Key, string Text)> SearchAsync(string query, int top = -1);
 }
 
-public class RagService : IRagService
+public sealed class RagService : IRagService
 {
     public IRagService? RagServiceInstance { get; set; }
 

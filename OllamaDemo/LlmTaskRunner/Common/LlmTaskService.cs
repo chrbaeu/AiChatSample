@@ -1,11 +1,12 @@
 ﻿using Microsoft.Extensions.AI;
 using OllamaDemo.Shared.Common;
 using OllamaSharp;
+using System.Globalization;
 using System.Text;
 
 namespace OllamaDemo.LlmTaskRunner.Common;
 
-public sealed partial class LlmTaskService(string modelId, Uri ollamaUrl) : IDisposable
+internal sealed partial class LlmTaskService(string modelId, Uri ollamaUrl) : IDisposable
 {
     private readonly IChatClient client = new OllamaApiClient(ollamaUrl, modelId);
 
@@ -13,7 +14,7 @@ public sealed partial class LlmTaskService(string modelId, Uri ollamaUrl) : IDis
     {
         if (string.IsNullOrWhiteSpace(systemPromt)) { return "Du bist ein hilfsbereiter Assistent."; }
         if (string.IsNullOrWhiteSpace(prompt)) { prompt = "{1}"; }
-        var byIndexDict = item.Select((value, index) => (value, index)).ToDictionary(x => (x.index + 1).ToString(), x => x.value.Value);
+        var byIndexDict = item.Select((value, index) => (value, index)).ToDictionary(x => (x.index + 1).ToString(CultureInfo.InvariantCulture), x => x.value.Value);
         systemPromt = systemPromt.ReplacePlaceholders(byIndexDict);
         prompt = prompt.ReplacePlaceholders(byIndexDict);
         systemPromt = systemPromt.ReplacePlaceholders(item);

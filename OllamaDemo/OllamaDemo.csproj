@@ -9,11 +9,13 @@
 		<UseWPF>true</UseWPF>
 		<RootNamespace>OllamaDemo</RootNamespace>
 		<StartupObject>OllamaDemo.Program</StartupObject>
+		<AnalysisMode>Recommended</AnalysisMode>
 	</PropertyGroup>
 
 	<ItemGroup>
 		<ApplicationDefinition Remove="App.xaml" />
 	</ItemGroup>
+	
 	<ItemGroup>
 		<Page Include="App.xaml" />
 	</ItemGroup>
@@ -21,12 +23,12 @@
 	<ItemGroup>
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
 		<PackageReference Include="EPPlus" Version="8.4.2" />
-		<PackageReference Include="Microsoft.AspNetCore.Components.WebView.Wpf" Version="10.0.40" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.WebView.Wpf" Version="10.0.41" />
 		<PackageReference Include="Microsoft.Extensions.AI" Version="10.3.0" />
 		<PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.3" />
 		<PackageReference Include="Microsoft.SemanticKernel.Connectors.InMemory" Version="1.67.1-preview" />
-		<PackageReference Include="OllamaSharp" Version="5.4.16" />
-		<PackageReference Include="Radzen.Blazor" Version="9.0.4" />
+		<PackageReference Include="OllamaSharp" Version="5.4.18" />
+		<PackageReference Include="Radzen.Blazor" Version="9.0.6" />
 	</ItemGroup>
 
 </Project>

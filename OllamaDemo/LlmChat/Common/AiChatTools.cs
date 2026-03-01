@@ -1,17 +1,20 @@
 ﻿using CommunityToolkit.Mvvm.Messaging;
 using System.ComponentModel;
+using System.Globalization;
 using System.Windows;
 
 namespace OllamaDemo.LlmChat.Common;
 
-public record AiChatToolThemeChangeEvent(bool DarkModeEnabled);
+public sealed record AiChatToolThemeChangeEvent(bool DarkModeEnabled);
 
-public class AiChatTools(IMessenger messenger)
+#pragma warning disable CA1822
+public sealed class AiChatTools(IMessenger messenger)
 {
     [Description("Returns the current date/time in the yyyy-MM-dd HH:mm:ss format (local time).")]
+
     public string GetCurrentDate()
     {
-        return DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+        return DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.CurrentCulture);
     }
 
 #pragma warning disable WPF0001
@@ -35,3 +38,4 @@ public class AiChatTools(IMessenger messenger)
 #pragma warning restore WPF0001
 
 }
+#pragma warning restore CA1822
