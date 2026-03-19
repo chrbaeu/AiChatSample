@@ -75,7 +75,7 @@ public sealed partial class LlmTaskRunnerViewModel(
     private async Task ExportToExcel()
     {
         var filePath = dialogService.ShowSaveFileDialog(null, "Excel Dateien (*.xlsx)|*.xlsx", null, "Export.xlsx");
-        if (filePath is null) { return; }
+        if (string.IsNullOrEmpty(filePath)) { return; }
         try
         {
             tableData.SaveAsExcel(filePath);
