@@ -1,5 +1,6 @@
 ﻿using DevExpress.AIIntegration;
 using Microsoft.Extensions.AI;
+using OllamaSharp;
 using System;
 using System.Globalization;
 using System.Threading;
@@ -18,7 +19,7 @@ public partial class App : System.Windows.Application
         Thread.CurrentThread.CurrentCulture = culture;
         CultureInfo.DefaultThreadCurrentCulture = culture;
         CultureInfo.DefaultThreadCurrentUICulture = culture;
-        IChatClient asChatClient = new OllamaChatClient(new Uri("http://localhost:11434/"), "gemma3:12b");
+        IChatClient asChatClient = new OllamaApiClient(new Uri("http://localhost:11434"), "gemma3:12b");
         AIExtensionsContainerDesktop.Default.RegisterChatClient(asChatClient);
     }
 
