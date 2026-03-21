@@ -22,6 +22,7 @@ public class ChatService(
 
     public async Task SendMessageAsync(string message, bool useTools = false, bool useEmbeddings = false, float? temperature = null, string? imagePath = null)
     {
+        //await Task.CompletedTask.ConfigureAwait(ConfigureAwaitOptions.ForceYielding);
         if (useEmbeddings)
         {
             List<DataItem> data = await serviceProvider.GetRequiredService<EmbeddingService>().Search(message);
