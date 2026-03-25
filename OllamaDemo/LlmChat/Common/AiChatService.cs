@@ -2,6 +2,7 @@
 using OllamaDemo.Shared.Common;
 using Radzen;
 using System.Collections.Concurrent;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Text;
 
@@ -67,7 +68,7 @@ public sealed class AiChatService(IChatClient chatClient, AiChatTools aiChatTool
 
         var session = GetOrCreateSession(sessionId);
 
-        if (apiKeyHeader == "UseEmbeddings")
+        if (apiKeyHeader?.Contains("UseEmbeddings") == true)
         {
             StringBuilder esb = new("The following text is additional context retrieved from a knowledge base. " +
                     "Use it to answer the question when it is relevant.");
@@ -110,11 +111,40 @@ public sealed class AiChatService(IChatClient chatClient, AiChatTools aiChatTool
             ]
         };
 
+        if (apiKeyHeader?.Contains("UseThinking") == true)
+        {
+            options.AdditionalProperties = new AdditionalPropertiesDictionary
+            {
+                ["think"] = true
+            };
+        }
+        if (apiKeyHeader?.Contains("NoThinking") == true)
+        {
+            options.AdditionalProperties = new AdditionalPropertiesDictionary
+            {
+                ["think"] = false
+            };
+        }
+
         StringBuilder sb = new();
+        long? timestamp = null;
         await foreach (var update in chatClient.GetStreamingResponseAsync(history, options, cancellationToken).ConfigureAwait(false))
         {
+            if (update.Contents?.OfType<TextReasoningContent>().FirstOrDefault() is { } thinking && sb.Length == 0)
+            {
+                timestamp = Stopwatch.GetTimestamp();
+                sb.Append("[Thinking ... ");
+                yield return "[Thinking ... ";
+            }
             if (!string.IsNullOrEmpty(update.Text))
             {
+                if (timestamp is { } t)
+                {
+                    var msg = $"{Stopwatch.GetElapsedTime(t).TotalSeconds:N1} s]\n";
+                    sb.Append(msg);
+                    yield return msg;
+                    timestamp = null;
+                }
                 sb.Append(update.Text);
                 yield return update.Text;
             }
