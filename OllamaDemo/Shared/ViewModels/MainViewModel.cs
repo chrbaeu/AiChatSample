@@ -2,12 +2,14 @@
 using OllamaDemo.LlmChat.ViewModels;
 using OllamaDemo.LlmTaskRunner.ViewModels;
 using OllamaDemo.SemanticSearch.ViewModels;
+using OllamaDemo.StructuredData.ViewModels;
 using OllamaDemo.Shared.ViewModels;
 
 namespace OllamaDemo;
 
 public sealed partial class MainViewModel(
         ExcelDataViewModel excelDataViewModel,
+        StructuredDataViewModel structuredDataViewModel,
         SemanticSearchViewModel semanticSearchViewModel,
         LlmTaskRunnerViewModel llmTaskRunnerViewModel,
         LlmChatViewModel llmChatViewModel
@@ -15,6 +17,9 @@ public sealed partial class MainViewModel(
 {
     [ObservableProperty]
     public partial ExcelDataViewModel ExcelDataViewModel { get; set; } = excelDataViewModel;
+
+    [ObservableProperty]
+    public partial StructuredDataViewModel StructuredDataViewModel { get; set; } = structuredDataViewModel;
 
     [ObservableProperty]
     public partial SemanticSearchViewModel SemanticSearchViewModel { get; set; } = semanticSearchViewModel;

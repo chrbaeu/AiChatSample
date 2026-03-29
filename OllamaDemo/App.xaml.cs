@@ -5,6 +5,7 @@ using Microsoft.Extensions.Hosting;
 using OllamaDemo.LlmChat.ViewModels;
 using OllamaDemo.LlmTaskRunner.ViewModels;
 using OllamaDemo.SemanticSearch.ViewModels;
+using OllamaDemo.StructuredData.ViewModels;
 using OllamaDemo.Shared.Common;
 using OllamaDemo.Shared.ViewModels;
 using OllamaDemo.Shared.Views;
@@ -31,6 +32,7 @@ public sealed partial class App : Application
 
         hostApplicationBuilder.Services.AddSingleton<MainViewModel>();
         hostApplicationBuilder.Services.AddSingleton<ExcelDataViewModel>();
+        hostApplicationBuilder.Services.AddSingleton<StructuredDataViewModel>();
         hostApplicationBuilder.Services.AddSingleton<SemanticSearchViewModel>();
         hostApplicationBuilder.Services.AddSingleton<LlmTaskRunnerViewModel>();
         hostApplicationBuilder.Services.AddSingleton<LlmChatViewModel>();

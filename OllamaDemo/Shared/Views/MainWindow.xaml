@@ -8,6 +8,7 @@
     xmlns:vmLlmChat="clr-namespace:OllamaDemo.LlmChat.Views"
     xmlns:vmLlmTaskRunner="clr-namespace:OllamaDemo.LlmTaskRunner.Views"
     xmlns:vmSemanticSearch="clr-namespace:OllamaDemo.SemanticSearch.Views"
+    xmlns:vmStructuredData="clr-namespace:OllamaDemo.StructuredData.Views"
     xmlns:vmShared="clr-namespace:OllamaDemo.Shared.Views"
     Title="OllamaDemo"
     Width="1000"
@@ -22,6 +23,10 @@
 
             <TabItem Header="Daten">
                 <vmShared:ExcelDataView DataContext="{Binding ExcelDataViewModel}" />
+            </TabItem>
+
+            <TabItem Header="Strukturierte Daten">
+                <vmStructuredData:StructuredDataView DataContext="{Binding StructuredDataViewModel}" />
             </TabItem>
 
             <TabItem Header="Semantische Suche">
