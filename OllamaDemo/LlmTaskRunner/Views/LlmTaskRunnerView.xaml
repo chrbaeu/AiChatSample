@@ -42,6 +42,7 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
@@ -51,21 +52,26 @@
                         VerticalAlignment="Center"
                         Text="Model:" />
                     <ComboBox
-                        Grid.Column="0"
                         Width="150"
                         Margin="4"
                         IsEnabled="{Binding IsRunning, Converter={StaticResource InverseBoolConverter}}"
                         ItemsSource="{Binding AvailableModels}"
                         SelectedItem="{Binding SelectedModel}" />
-                    <Button
-                        Grid.Column="1"
-                        Margin="4"
-                        Padding="4"
-                        Command="{Binding RunCommand}"
-                        Content="Ausführen" />
                 </StackPanel>
-                <ProgressBar
+                <Button
                     Grid.Column="1"
+                    Margin="4"
+                    Padding="4"
+                    Command="{Binding RunCommand}"
+                    Content="Ausführen" />
+                <Button
+                    Grid.Column="2"
+                    Margin="4"
+                    Padding="4"
+                    Command="{Binding CancelCommand}"
+                    Content="Abbrechen" />
+                <ProgressBar
+                    Grid.Column="3"
                     Width="150"
                     Margin="4"
                     Value="{Binding Progress}">

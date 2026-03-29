@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.AI;
 using OllamaDemo.Shared.Common;
 using OllamaSharp;
+using System.Threading;
 using System.Globalization;
 using System.Text;
 
@@ -10,7 +11,7 @@ internal sealed partial class LlmTaskService(string modelId, Uri ollamaUrl) : ID
 {
     private readonly IChatClient client = new OllamaApiClient(ollamaUrl, modelId);
 
-    public async Task<string> RunTaskAsync(string systemPromt, string prompt, IReadOnlyDictionary<string, string> item)
+    public async Task<string> RunTaskAsync(string systemPromt, string prompt, IReadOnlyDictionary<string, string> item, CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrWhiteSpace(systemPromt)) { return "Du bist ein hilfsbereiter Assistent."; }
         if (string.IsNullOrWhiteSpace(prompt)) { prompt = "{1}"; }
@@ -24,8 +25,9 @@ internal sealed partial class LlmTaskService(string modelId, Uri ollamaUrl) : ID
             new ChatMessage(ChatRole.User, prompt)
         ];
         StringBuilder sb = new();
-        await foreach (var data in client.GetStreamingResponseAsync(messages))
+        await foreach (var data in client.GetStreamingResponseAsync(messages, cancellationToken: cancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             sb.Append(data.Text);
         }
         return sb.ToString();

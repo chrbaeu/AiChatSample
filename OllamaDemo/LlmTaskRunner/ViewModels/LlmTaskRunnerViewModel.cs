@@ -14,6 +14,7 @@ public sealed partial class LlmTaskRunnerViewModel(
     ) : ObservableObject
 {
     private TableData tableData = new();
+    private CancellationTokenSource? runCancellationTokenSource;
 
     [ObservableProperty]
     public partial string SystemPrompt { get; set; } = "Du bist ein hilfsbereiter Assistent.";
@@ -37,38 +38,60 @@ public sealed partial class LlmTaskRunnerViewModel(
     public partial DataView DataView { get; private set; } = new();
 
 
-    [RelayCommand]
+    [RelayCommand(CanExecute = nameof(CanRun))]
     private async Task Run()
     {
         if (string.IsNullOrWhiteSpace(SystemPrompt) || string.IsNullOrWhiteSpace(UserPrompt)) { return; }
         Progress = 0;
         IsRunning = true;
         using var llmTaskService = new LlmTaskService(SelectedModel, appSettings.OllamaEndpointUri);
+        using var cancellationTokenSource = new CancellationTokenSource();
+        runCancellationTokenSource = cancellationTokenSource;
         tableData = excelDataService.ExcelData.Copy();
         tableData.AddColumn("Antwort des LLM");
         var dataTable = tableData.CreateDataTable();
         DataView = dataTable.DefaultView;
         try
         {
-            await Task.Run(async () =>
+            int row = 0, resultColumn = tableData.Columns.Count - 1;
+            foreach (var item in tableData.GetRows())
             {
-                int row = 0, resultColumn = tableData.Columns.Count - 1;
-                foreach (var item in tableData.GetRows())
-                {
-                    var result = await llmTaskService.RunTaskAsync(SystemPrompt, UserPrompt, item);
-                    tableData.Set("Antwort des LLM", row, result);
-                    dataTable.Rows[row][resultColumn] = result;
-                    row++;
-                    Progress = (float)row / tableData.RowCount * 100;
-                }
-            });
+                cancellationTokenSource.Token.ThrowIfCancellationRequested();
+                var result = await llmTaskService.RunTaskAsync(SystemPrompt, UserPrompt, item, cancellationTokenSource.Token);
+                tableData.Set("Antwort des LLM", row, result);
+                dataTable.Rows[row][resultColumn] = result;
+                row++;
+                Progress = (float)row / tableData.RowCount * 100;
+            }
+        }
+        catch (OperationCanceledException)
+        {
         }
         finally
         {
-            llmTaskService.Dispose();
-            Progress = 100;
+            runCancellationTokenSource = null;
+            if (!cancellationTokenSource.IsCancellationRequested)
+            {
+                Progress = 100;
+            }
             IsRunning = false;
         }
+    }
+
+    private bool CanRun() => !IsRunning;
+
+    [RelayCommand(CanExecute = nameof(CanCancel))]
+    private void Cancel()
+    {
+        runCancellationTokenSource?.Cancel();
+    }
+
+    private bool CanCancel() => IsRunning;
+
+    partial void OnIsRunningChanged(bool value)
+    {
+        RunCommand.NotifyCanExecuteChanged();
+        CancelCommand.NotifyCanExecuteChanged();
     }
 
     [RelayCommand]
