@@ -14,7 +14,7 @@ public sealed partial class StructuredDataViewModel(
     private TableData tableData = new();
 
     [ObservableProperty]
-    public partial string SystemPrompt { get; set; } = "Du bist ein hilfsbereiter Assistent und lieferst strukturierte Daten im JSON Format.";
+    public partial string SystemPrompt { get; set; } = "Du bist ein hilfsbereiter Assistent und lieferst strukturierte Daten im JSON-Format.";
 
     [ObservableProperty]
     public partial string UserPrompt { get; set; } = "Erstelle eine Tabelle mit den Spalten A, B und C für XYZ.";

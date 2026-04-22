@@ -17,7 +17,7 @@
         </Grid.RowDefinitions>
 
         <StackPanel Grid.Row="0">
-            <TextBlock Margin="4,4,4,0" Text="Systemprompt" />
+            <TextBlock Margin="4,4,4,0" Text="System-Prompt" />
             <TextBox
                 Height="80"
                 Margin="4"
@@ -49,7 +49,7 @@
                     <TextBlock
                         Margin="4"
                         VerticalAlignment="Center"
-                        Text="Model:" />
+                        Text="Modell:" />
                     <ComboBox
                         Width="150"
                         Margin="4"
@@ -85,7 +85,7 @@
                     Margin="4"
                     Padding="4"
                     Command="{Binding ExportToExcelCommand}"
-                    Content="Excel Export"
+                    Content="Excel-Export"
                     IsEnabled="{Binding IsRunning, Converter={StaticResource InverseBoolConverter}}" />
             </Grid>
         </StackPanel>

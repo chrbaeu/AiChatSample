@@ -31,7 +31,8 @@ public partial class LlmChatView : UserControl
         serviceCollection.AddSingleton<IMessenger>(WeakReferenceMessenger.Default);
         serviceCollection.AddSingleton<IChatClient>(sp =>
         {
-            IChatClient client = new OllamaApiClient(new Uri("http://localhost:11434"));
+            var appSettings = sp.GetRequiredService<AppSettings>();
+            IChatClient client = new OllamaApiClient(appSettings.OllamaEndpointUri);
             client = ChatClientBuilderChatClientExtensions.AsBuilder(client).UseFunctionInvocation().Build();
             return client;
         });

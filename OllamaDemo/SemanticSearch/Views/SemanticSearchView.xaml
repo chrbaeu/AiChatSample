@@ -23,7 +23,7 @@
             <TextBlock
                 Margin="4"
                 VerticalAlignment="Center"
-                Text="Model:" />
+                Text="Modell:" />
             <ComboBox
                 Width="175"
                 Margin="4,4,16,4"
@@ -128,7 +128,7 @@
                 Margin="4"
                 Padding="4"
                 Command="{Binding ExportToExcelCommand}"
-                Content="Excel Export"
+                Content="Excel-Export"
                 IsEnabled="{Binding IsRunning, Converter={StaticResource InverseBoolConverter}}" />
         </Grid>
 

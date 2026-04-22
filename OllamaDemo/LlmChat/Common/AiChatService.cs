@@ -108,21 +108,20 @@ public sealed class AiChatService(IChatClient chatClient, AiChatTools aiChatTool
                 AIFunctionFactory.Create(aiChatTools.GetCurrentDate),
                 AIFunctionFactory.Create(aiChatTools.SetDarkMode),
                 AIFunctionFactory.Create(aiChatTools.IsDarkMode),
-            ]
+            ],
         };
 
-        if (apiKeyHeader?.Contains("UseThinking") == true)
+        var reasoningEffort = apiKeyHeader?
+            .Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+            .FirstOrDefault(part => part.StartsWith("ReasoningEffort=", StringComparison.OrdinalIgnoreCase))?
+            .Split('=', 2)
+            .ElementAtOrDefault(1);
+
+        if (Enum.TryParse<ReasoningEffort>(reasoningEffort, true, out var effort))
         {
-            options.AdditionalProperties = new AdditionalPropertiesDictionary
+            options.Reasoning = new ReasoningOptions()
             {
-                ["think"] = true
-            };
-        }
-        if (apiKeyHeader?.Contains("NoThinking") == true)
-        {
-            options.AdditionalProperties = new AdditionalPropertiesDictionary
-            {
-                ["think"] = false
+                Effort = effort,
             };
         }
 

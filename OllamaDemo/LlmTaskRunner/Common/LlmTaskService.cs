@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.AI;
 using OllamaDemo.Shared.Common;
 using OllamaSharp;
-using System.Threading;
 using System.Globalization;
 using System.Text;
 
@@ -11,17 +10,17 @@ internal sealed partial class LlmTaskService(string modelId, Uri ollamaUrl) : ID
 {
     private readonly IChatClient client = new OllamaApiClient(ollamaUrl, modelId);
 
-    public async Task<string> RunTaskAsync(string systemPromt, string prompt, IReadOnlyDictionary<string, string> item, CancellationToken cancellationToken = default)
+    public async Task<string> RunTaskAsync(string systemPrompt, string prompt, IReadOnlyDictionary<string, string> item, CancellationToken cancellationToken = default)
     {
-        if (string.IsNullOrWhiteSpace(systemPromt)) { return "Du bist ein hilfsbereiter Assistent."; }
+        if (string.IsNullOrWhiteSpace(systemPrompt)) { systemPrompt = "Du bist ein hilfsbereiter Assistent."; }
         if (string.IsNullOrWhiteSpace(prompt)) { prompt = "{1}"; }
         var byIndexDict = item.Select((value, index) => (value, index)).ToDictionary(x => (x.index + 1).ToString(CultureInfo.InvariantCulture), x => x.value.Value);
-        systemPromt = systemPromt.ReplacePlaceholders(byIndexDict);
+        systemPrompt = systemPrompt.ReplacePlaceholders(byIndexDict);
         prompt = prompt.ReplacePlaceholders(byIndexDict);
-        systemPromt = systemPromt.ReplacePlaceholders(item);
+        systemPrompt = systemPrompt.ReplacePlaceholders(item);
         prompt = prompt.ReplacePlaceholders(item);
         List<ChatMessage> messages = [
-            new ChatMessage(ChatRole.System, systemPromt),
+            new ChatMessage(ChatRole.System, systemPrompt),
             new ChatMessage(ChatRole.User, prompt)
         ];
         StringBuilder sb = new();

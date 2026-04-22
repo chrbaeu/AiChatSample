@@ -16,6 +16,7 @@ public class ChatService(
         IServiceProvider serviceProvider
     )
 {
+    private readonly string initialSystemPrompt = settings.Value.ChatModelSystemPrompt;
     private readonly List<ChatMessage> conversation = string.IsNullOrEmpty(settings.Value.ChatModelSystemPrompt) ? [] : [new ChatMessage(ChatRole.System, settings.Value.ChatModelSystemPrompt)];
 
     public IEnumerable<ChatMessage> Messages => conversation.Where(m => (m.Role == ChatRole.User || m.Role == ChatRole.Assistant) && !string.IsNullOrEmpty(m.ToString()));
@@ -37,7 +38,7 @@ public class ChatService(
             }
             conversation.Add(new(ChatRole.Tool, stringBuilder.ToString()));
         }
-        var choosenChatClient = chatClient;
+        var chosenChatClient = chatClient;
         ChatOptions chatOptions = new();
         if (temperature.HasValue)
         {
@@ -51,7 +52,7 @@ public class ChatService(
         }
         if (conversation.Any(x => x.Role == ChatRole.User && x.Contents.Any(x => x is DataContent { MediaType: "image/jpeg" })))
         {
-            choosenChatClient = serviceProvider.GetRequiredKeyedService<IChatClient>("Vision");
+            chosenChatClient = serviceProvider.GetRequiredKeyedService<IChatClient>("Vision");
         }
         if (useTools)
         {
@@ -63,7 +64,7 @@ public class ChatService(
         }
         conversation.Add(new(ChatRole.Assistant, ""));
         messenger.Send(conversation);
-        await foreach (var response in choosenChatClient.GetStreamingResponseAsync(conversation, chatOptions))
+        await foreach (var response in chosenChatClient.GetStreamingResponseAsync(conversation, chatOptions))
         {
             conversation[^1] = new(ChatRole.Assistant, conversation[^1].Text + response.Text);
             messenger.Send(conversation.ToList());
@@ -73,6 +74,10 @@ public class ChatService(
     public void Clear()
     {
         conversation.Clear();
+        if (!string.IsNullOrEmpty(initialSystemPrompt))
+        {
+            conversation.Add(new(ChatRole.System, initialSystemPrompt));
+        }
         messenger.Send(conversation);
     }
 

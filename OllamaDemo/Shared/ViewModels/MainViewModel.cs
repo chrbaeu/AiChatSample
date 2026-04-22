@@ -2,8 +2,8 @@
 using OllamaDemo.LlmChat.ViewModels;
 using OllamaDemo.LlmTaskRunner.ViewModels;
 using OllamaDemo.SemanticSearch.ViewModels;
-using OllamaDemo.StructuredData.ViewModels;
 using OllamaDemo.Shared.ViewModels;
+using OllamaDemo.StructuredData.ViewModels;
 
 namespace OllamaDemo;
 

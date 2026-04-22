@@ -33,7 +33,7 @@
                 <vmSemanticSearch:SemanticSearchView DataContext="{Binding SemanticSearchViewModel}" />
             </TabItem>
 
-            <TabItem Header="LLM Tasks">
+            <TabItem Header="LLM-Tasks">
                 <vmLlmTaskRunner:LlmTaskRunnerView DataContext="{Binding LlmTaskRunnerViewModel}" />
             </TabItem>
 

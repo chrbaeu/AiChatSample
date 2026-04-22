@@ -29,7 +29,7 @@ public sealed class AiChatTools(IMessenger messenger)
         });
     }
 
-    [Description("Checks if the the dark mode is enabled.")]
+    [Description("Checks if the dark mode is enabled.")]
     public bool IsDarkMode()
     {
         return Application.Current.ThemeMode == ThemeMode.Dark;

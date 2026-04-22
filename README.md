@@ -1,11 +1,11 @@
 # AiChatSample
-An local AI chat example written in C# with WPF and Blazor.
+A local AI chat example written in C# with WPF and Blazor.
 
 ![Logo](https://raw.githubusercontent.com/chrbaeu/AiChatSample/refs/heads/main/Screenshot.png)
 
 Microsoft has simplified the use of AI models in C# with the [Microsoft.Extensions.AI](https://devblogs.microsoft.com/dotnet/introducing-microsoft-extensions-ai-preview/) NuGet package.
 
-This repository contains a simple example of an local AI chat in .NET that was implemented with C# using WPF and Blazor.
+This repository contains a simple example of a local AI chat in .NET that was implemented with C# using WPF and Blazor.
 
 The local AI model is executed and accessed via [Ollama](
 https://ollama.com/). The URL and the model can be configured in the “appsettings.json”.
